@@ -1,0 +1,9 @@
+.venv/
+.state/
+out/state_*/
+__pycache__/
+.env
+*.pyc
+prompt.txt
+# Added by ggshield
+.cache_ggshield

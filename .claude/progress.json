@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0",
+  "current_phase": "00",
+  "setup_package": "created",
+  "harness_status": "upstream_stub",
+  "phases": {
+    "00": {
+      "status": "IN_PROGRESS",
+      "evidence": [
+        "VERIFIED_OFFLINE 2026-10-13: .venv Python 3.12.9 imports all 6 pinned requirements",
+        "VERIFIED_OFFLINE 2026-10-13: check_setup.py PASS; test_guard.py 7/7; tests/offline 4/4",
+        "make is not installed on this Windows host; Makefile assumes .venv/bin/python"
+      ]
+    },
+    "01": {
+      "status": "NOT_STARTED",
+      "evidence": []
+    },
+    "02": {
+      "status": "NOT_STARTED",
+      "evidence": []
+    },
+    "03": {
+      "status": "NOT_STARTED",
+      "evidence": []
+    },
+    "04": {
+      "status": "NOT_STARTED",
+      "evidence": []
+    },
+    "05": {
+      "status": "NOT_STARTED",
+      "evidence": []
+    },
+    "06": {
+      "status": "NOT_STARTED",
+      "evidence": []
+    },
+    "07": {
+      "status": "NOT_STARTED",
+      "evidence": []
+    },
+    "08": {
+      "status": "NOT_STARTED",
+      "evidence": []
+    },
+    "09": {
+      "status": "NOT_STARTED",
+      "evidence": []
+    }
+  },
+  "open_handoffs": [],
+  "live_verification": "NOT_RUN",
+  "api_route": "offline_no_key (see .claude/decisions/D-001-offline-development.md)",
+  "next_action": "Phase 00: requirement checklist and module map; then phase 01 readers/state. API route decided: offline (D-001).",
+  "setup_revision": "verifiable-audit",
+  "features": {
+    "decision_traces": {
+      "status": "PLANNED",
+      "evidence": []
+    },
+    "constraint_verification": {
+      "status": "PLANNED",
+      "evidence": []
+    },
+    "metamorphic_evaluations": {
+      "status": "PLANNED",
+      "evidence": []
+    },
+    "cross_encoder_reranker": {
+      "status": "OPTIONAL_NOT_STARTED",
+      "enabled": false,
+      "evidence": []
+    },
+    "custom_training": {
+      "status": "OUT_OF_SCOPE",
+      "evidence": []
+    }
+  },
+  "experiments": []
+}

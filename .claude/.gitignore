@@ -1,0 +1,4 @@
+settings.local.json
+__pycache__/
+hooks/__pycache__/
+scripts/__pycache__/
