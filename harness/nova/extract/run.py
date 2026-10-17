@@ -261,8 +261,8 @@ def _finish(store, stats: Counter, provider, u, docs: list[dict], req: LLMReques
 
 
 def run_pending(store, provider_factory, cfg: dict, seconds: float) -> dict:
-    """Run every runnable unit within `seconds`. Returns counts; raises LLMUnavailable if no back end exists and
-    model work is pending (documents stay stored and the units stay pending)."""
+    """Run every runnable unit within `seconds`. Use the source-validated local reader when no model backend
+    can be constructed; a configured provider's authentication or rate-limit failures keep their normal handling."""
     stats = Counter()
     budget = CallBudget(seconds, int(cfg["max_calls_per_step"]))
     provider = None
@@ -271,7 +271,13 @@ def run_pending(store, provider_factory, cfg: dict, seconds: float) -> dict:
         units = [u for u in store.units(("pending", "failed")) if u["attempts"] < MAX_ATTEMPTS]
         model_units = [u for u in units if u["kind"] in ("bundle", "long", "table", "recheck")]
         if model_units and provider is None:
-            provider = provider_factory()      # may raise LLMUnavailable
+            try:
+                provider = provider_factory()
+            except LLMUnavailable:
+                if shared is not None:
+                    shared.close()
+                from .local import run_local
+                return run_local(store, budget.remaining_s())
         cached_work, live_work = [], []
         for u in model_units:
             docs = [_doc_payload(store, d) for d in json.loads(u["docs_json"])]

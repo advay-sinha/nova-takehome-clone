@@ -6,13 +6,25 @@ Final state, 2026-10-18. Practice grade 99.8/100, my eval set 20/20, exam sheet 
 
 Every email and attachment is an occurrence keyed by the path the grader cites (`batch_01/0003.eml#INV.pdf`), with
 its UTC receipt time from the Date header, sender and page text from the grader's own reader (OCR for scans). A
-resent identical file stays a separate occurrence. Claude transcribes each document into typed facts: contracts and
+resent identical file stays a separate occurrence. The selected document reader transcribes each document into typed facts: contracts and
 terms, rate/fuel/FX/accessorial rows, charge-code aliases, Schedule 1 people, invoices and lines, credit notes,
 ledger and tracking rows, waivers, extensions, rate notices, status events. Every fact carries `{doc, page, quote}`.
 Python verifies each quote on its page and checks numbers and dates in the same document (date order learned per
 sender). Numeric checks compare whole values, not substrings of larger numbers or IDs; invoice arithmetic is
 checked, and a misread gets one targeted re-read. Money is a printed string parsed
 to Decimal. All state is SQLite under `--state-dir`.
+
+With an API key, extraction uses the Anthropic SDK; otherwise it selects the Claude CLI when available. If neither
+backend can be constructed, a local reader uses explicit clauses, rate tables, invoice labels, spreadsheet headers
+and email statements. It shares the model path's fact schema and validators, and records its backend as `local`.
+Agreement terms and charge aliases are read before billing units. A long agreement is read in full once, including
+when resuming after a model completed only earlier chunks. The reader preserves quoted status and waiver conditions;
+the existing resolver still decides authority. Bank-account footers are excluded from charge rows.
+
+This path has no model calls or response-cache reads. It fails on a recognised invoice without parseable rows;
+arithmetic mismatches use the existing recheck and unresolved-extraction signals. It is a bounded structural parser:
+unfamiliar clauses and layouts remain a coverage limitation. Errors from an already configured live provider are
+not converted into local successes. The supplied workflow is unchanged; an empty key now exercises this reader.
 
 ## Conflicts
 
@@ -58,6 +70,10 @@ later reports but not earlier ones. A key whose verdict or amount changes gets a
 nothing is carried over.
 
 ## Cost
+
+The credential-free reader incurs no model API cost. Fresh runs reproduce the practice score (99.831/100,
+all hard gates clear), 20/20 eval cases and the exam sheet's amounts, ids, deadlines and abstentions. These runs start
+with empty state and no shared response cache. The model-backed measurements below are from the committed baseline.
 
 Measured on the whole practice mailbox (163 documents, 82 calls) through Claude Code with `claude-opus-5-5`: 262k
 output, 221k cache-write and 735k cache-read tokens. At API prices ($4/$20 per million input/output, $0.20 cache
