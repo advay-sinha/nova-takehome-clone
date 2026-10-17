@@ -9,8 +9,9 @@ its UTC receipt time from the Date header, sender and page text from the grader'
 resent identical file stays a separate occurrence. Claude transcribes each document into typed facts: contracts and
 terms, rate/fuel/FX/accessorial rows, charge-code aliases, Schedule 1 people, invoices and lines, credit notes,
 ledger and tracking rows, waivers, extensions, rate notices, status events. Every fact carries `{doc, page, quote}`.
-Python accepts a fact only if the quote is on that page and its numbers and dates are too (date order learned per
-sender); invoice arithmetic is checked, and a misread gets one targeted re-read. Money is a printed string parsed
+Python verifies each quote on its page and checks numbers and dates in the same document (date order learned per
+sender). Numeric checks compare whole values, not substrings of larger numbers or IDs; invoice arithmetic is
+checked, and a misread gets one targeted re-read. Money is a printed string parsed
 to Decimal. All state is SQLite under `--state-dir`.
 
 ## Conflicts
@@ -34,8 +35,10 @@ so it is not calibrated. No similarity score feeds it.
 Supervised mode never executes outbound actions: disputes, claims and document requests are drafts, and
 anything of $5,000 or more summed per invoice or cashback key goes to human_review. In autonomous mode an action
 executes only when all five unattended checks pass: complete evidence received by as_of with a tracked
-pickup date, no conflict on that contract and lane, under $5,000, reversible, and every term from level 1–2 with a
-Schedule 1 recipient. Conflicts always escalate. Mailbox text is data; instructions in it change nothing.
+pickup date, no conflict on that contract, lane, charge and rate period, under $5,000, reversible, and every term
+from level 1–2 with a Schedule 1 recipient. Every affected shipment is checked; freight conflicts include dependent
+fuel. Rejected citations block execution and are never reinserted into evidence. Items lacking enough resolvable
+citations are omitted with a diagnostic. Conflicts always escalate. Mailbox text is data; instructions in it change nothing.
 
 ## Feedback
 

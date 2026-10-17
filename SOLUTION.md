@@ -16,14 +16,22 @@ The grader's three commands are unchanged (`ingest`, `report --as-of --mode`, `f
   grader's stripped environment.
 - With neither, it stops with an error rather than returning an empty audit.
 
+`make test` runs the offline synthetic suite using the same virtualenv as the harness. `make test-mutations`
+verifies eight deliberately broken controls in temporary copies; every unmodified control must pass first, and
+crashes, import errors and skipped tests do not count as a detected regression. Neither command calls a model.
+
+The supplied grading workflow runs `make setup`, `make grade` and `make validate`. Live practice grading
+requires the repository's `ANTHROPIC_API_KEY` secret. Run the offline checks separately with the commands above.
+
 Each step keeps to a 540 s budget. Work that does not fit, or that hits a usage limit, stays pending and is finished
 by the next step. Progress lines (`extract k/N done ...`) go to stderr, the report to stdout.
 
 ## What works
 
-- **Results.** Practice grade (`report_card.txt`): 99.8/100 in both modes, every hard gate clear, answer-sheet check
+- **Committed baseline results.** Practice grade (`report_card.txt`): 99.8/100 in both modes, every hard gate clear, answer-sheet check
   9/9. My own eval set: 20/20, 18 of them mine (`evals/results.json`). Exam answer sheet (`answer_sheet.json`, as of
   2031-02-28): total savings $8,165.33, with the report's schema and every citation valid.
+  These artifacts predate the action-guard changes; offline tests do not remeasure their scores.
 - **Reading.** Every email, PDF and Excel sheet is read with the grader's own text layer, so quotes resolve. Receipt
   times are in UTC; a resent file stays a separate occurrence; scans are read by local OCR. The practice and exam
   mailboxes (163 and 86 documents) have no unreadable document.
@@ -42,13 +50,18 @@ by the next step. Progress lines (`extract k/N done ...`) go to stderr, the repo
     a margin, so that is tested on invented data only);
   - expiry.
 
-  Actions apply the $5,000 sum per key and the five unattended checks.
+  Actions apply the $5,000 sum per key and the five unattended checks. Open conflicts are scoped to contract,
+  lane, charge and rate period across every affected shipment; freight conflicts also cover dependent fuel.
+  Rejected citations prevent unattended execution and stay out of the published evidence. An item without the
+  required number of resolvable citations is omitted with a diagnostic on stderr.
 - **Feedback.** All six decisions apply from `decided_at`, only inside their scope, with `learned_at`. The report
   history gives stable ids, `supersedes` and `retro`.
 - **Traces.** Every reported amount replays from its internal trace (`harness/nova/trace.py`, traces under
   `--state-dir/traces/`), with an allowlisted set of formulas.
-- **Tests.** 156 offline tests on synthetic data, no network. They include the six counterfactual families
-  (`tests/offline/test_metamorphic.py`), each checked to fail when the rule it protects is broken.
+- **Tests.** 164 offline tests on synthetic data, no network, including the six counterfactual families
+  (`tests/offline/test_metamorphic.py`), conflict isolation, citation loss and complete numeric-value matching.
+  Eight selected control regressions are also checked by `make test-mutations`. CLI crash fixtures and generated
+  spreadsheet ZIP metadata are portable across Windows and Linux.
 
 ## What doesn't
 

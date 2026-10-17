@@ -202,6 +202,12 @@ def freight_amount(choice: RateChoice, weight: Decimal) -> Decimal | None:
     return amount
 
 
+def _pricing_scope(contract: Contract, lane, charge, pickup: date | None) -> dict:
+    period = next((label for label, (lo, hi) in contract.periods.items()
+                   if pickup and (lo is None or lo <= pickup) and (hi is None or pickup <= hi)), None)
+    return {"lane": norm_id(lane), "charge": charge, "period": period}
+
+
 def _events(world: World, awb: str) -> dict[str, date]:
     out = {}
     for f in world.of("tracking_events"):
@@ -295,6 +301,7 @@ def detect(world: World, overrides_for=lambda c: []) -> list[Candidate]:
             by_awb.setdefault(norm_id(ln.get("awb")) or "-", []).append(ln)
         totals = {"main": ZERO, "alt": ZERO}
         has_conflict, missing, unpriced, pickup_sources = None, None, [], set()
+        pricing_scopes, conflict_scopes = [], []
         cand = Candidate("overcharge", {"invoice_id": invoice_id, "class": "overcharge"}, "no_finding",
                          contract_id=c.id)
         steps = []
@@ -310,6 +317,11 @@ def detect(world: World, overrides_for=lambda c: []) -> list[Candidate]:
                         missing = (choice, ln)
                     elif choice.status == "conflict":
                         has_conflict = (choice, ln)
+                        # Fuel depends on the disputed freight rate; unrelated accessorials do not.
+                        for code in ("FRT", "FUEL"):
+                            scope = _pricing_scope(c, ln.get("lane"), code, pickup)
+                            if scope not in conflict_scopes:
+                                conflict_scopes.append(scope)
                     cand.lane = cand.lane or str(ln.get("lane")).upper()
             for scenario in ("main", "alt"):
                 for ln, correct, why in _price_shipment(world, pricer, ship, pickup, scenario):
@@ -327,10 +339,14 @@ def detect(world: World, overrides_for=lambda c: []) -> list[Candidate]:
                         totals[scenario] += diff
                         if scenario == "main":
                             cand.add_evidence(ln.evidence())
+                            lane = ln.get("lane") or next((row.get("lane") for row in ship if row.get("lane")), None)
+                            scope = _pricing_scope(c, lane, c.code_for(ln.get("charge_label")), pickup)
+                            if scope not in pricing_scopes:
+                                pricing_scopes.append(scope)
             if pfact is not None and pfact.kind != "invoice_lines":
                 cand.add_evidence(pfact.evidence())
         cand.signals = {"pickup_sources": sorted(s for s in pickup_sources if s), "unpriced": unpriced,
-                        "currency": currency}
+                        "currency": currency, "pricing_scopes": pricing_scopes, "conflict_scopes": conflict_scopes}
         cand.trace = {"formula": "overcharge.sum_positive_line_diffs", "invoice": invoice_id, "contract": c.id,
                       "currency": currency, "lines": steps}
         if pricer.learned is not None:

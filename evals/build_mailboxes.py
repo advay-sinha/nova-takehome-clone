@@ -111,7 +111,9 @@ def xlsx(title: str, header: list[str], rows: list[list]) -> bytes:
             data = src.read(info.filename)
             if info.filename == "docProps/core.xml":          # openpyxl stamps the save time here
                 data = re.sub(rb"(<dcterms:(?:created|modified)[^>]*>)[^<]*", rb"\g<1>2040-01-01T00:00:00Z", data)
-            dst.writestr(zipfile.ZipInfo(info.filename, (2040, 1, 1, 0, 0, 0)), data, zipfile.ZIP_DEFLATED)
+            entry = zipfile.ZipInfo(info.filename, (2040, 1, 1, 0, 0, 0))
+            entry.create_system = 0                   # fixed ZIP origin, independent of Windows/Linux host
+            dst.writestr(entry, data, zipfile.ZIP_DEFLATED)
     return out.getvalue()
 
 

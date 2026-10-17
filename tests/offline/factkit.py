@@ -52,6 +52,11 @@ class Kit:
                 "INSERT INTO facts (unit, kind, doc, page, quote, data_json, status, issues_json, origin) "
                 "VALUES (?,?,?,?,?,?,?,?,?)",
                 (f"test:{self.n}", kind, doc, 1, quote, __import__("json").dumps(row["data"]), status, "[]", "test"))
+            # Rule fixtures have real synthetic page text so report citation checks run normally.
+            self.store.db.execute(
+                "INSERT INTO pages (doc, page, text, method) VALUES (?,1,?,'textlayer') "
+                "ON CONFLICT(doc,page) DO UPDATE SET text = pages.text || char(10) || excluded.text",
+                (doc, quote))
         return data
 
     def world(self, as_of: str) -> World:

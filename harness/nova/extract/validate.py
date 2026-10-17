@@ -43,6 +43,7 @@ BLOCK_NUMERIC = {
 }
 BLOCK_DATES = {"term": ["initial_term_end", "non_renewal_notice_deadline"]}
 SLASH_DATE = re.compile(r"\b(\d{1,2})[/.](\d{1,2})[/.](\d{4})\b")
+NUMBER = re.compile(r"(?<![\w.])(?:USD|INR)?\s*([-+]?\d+(?:,\d+)*(?:\.\d+)?)(?![\d.])", re.I)
 
 
 def norm_text(s: str) -> str:
@@ -101,9 +102,15 @@ class PageIndex:
     def has_value(self, doc: str, page: int, value: str) -> bool:
         """On the cited page, or elsewhere in the same document (a header's total can sit on its last page)."""
         want = plain_number(value)
-        if want in plain_number(self.page_text(doc, page) or ""):
-            return True
-        return any(want in plain_number(t) for t in self.pages.get(doc, []))
+        pages = self.pages.get(doc, [])
+        try:
+            number = Decimal(want.rstrip("%"))
+        except InvalidOperation:
+            return any(want in plain_number(t) for t in pages)  # month fields, e.g. 2041-03
+        # Compare complete printed values. Removing all spaces first can join adjacent table cells,
+        # and a substring check would accept 118 from 1,118 or 20 from the year 2041.
+        return any(Decimal(token.replace(",", "")) == number
+                   for text in pages for token in NUMBER.findall(unicodedata.normalize("NFKC", text)))
 
     def date_issue(self, doc: str, page: int, iso: str) -> str | None:
         """None when `iso` is written on the cited page, or elsewhere in the same document, in a form that cannot
