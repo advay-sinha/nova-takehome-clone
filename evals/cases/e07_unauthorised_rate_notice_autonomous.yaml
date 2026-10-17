@@ -1,0 +1,13 @@
+name: a sales executive outside Schedule 1 announces a higher rate; autonomous
+mailbox: evals/mailboxes/m06_unauthorised_rate_notice
+as_of: '2041-04-30'
+mode: autonomous
+expect:
+  key:
+    invoice_id: CVN-41-00171
+    class: overcharge
+  verdict: finding
+  amount_usd: '28.56'
+  action: execute:dispute
+why: 'Clause 9: only the rates contact can change rates, so Appendix 1 BOS2-ATL4 45-99.5 kg H1 5.30 applies: (448.00
+  + 85.12) - (424.00 + 80.56) = 28.56. Every term relied on is level 1.'

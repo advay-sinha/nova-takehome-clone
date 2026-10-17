@@ -1,0 +1,14 @@
+name: invoice ship date is in H2, tracking collection date is in H1; autonomous
+mailbox: evals/mailboxes/m03_collection_date_wins
+as_of: '2041-07-31'
+mode: autonomous
+expect:
+  key:
+    invoice_id: CVN-41-00144
+    class: overcharge
+  verdict: finding
+  amount_usd: '28.91'
+  action: execute:dispute
+why: 'Clause 2.2 prices on the Collection Date; tracking PICKED_UP 2041-06-29 -> H1 5.10 and June fuel 19.75%: (787.50
+  + 157.50) - (765.00 + 151.09) = 28.91. Tracked date, under $5,000, MSA terms, Schedule 1 recipient: all five unattended
+  checks pass.'

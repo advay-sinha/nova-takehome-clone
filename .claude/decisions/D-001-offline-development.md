@@ -1,5 +1,7 @@
 # Decision: develop offline, no personal Anthropic key
 
+Status: SUPERSEDED on 2026-10-16 by D-002 (auto-select SDK or local Claude Code CLI back end).
+
 Date: 2026-10-13. Decided by: user.
 
 Context and observed failure: The harness extracts document meaning with Claude through the Anthropic SDK. `make grade` (practice report card) and `make sheet` (exam answer sheet, the pass/fail gate) run the harness over a full mailbox, so they need a working API route. Claude Pro/Claude Code cannot serve the harness's SDK calls.

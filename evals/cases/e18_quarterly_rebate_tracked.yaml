@@ -1,0 +1,14 @@
+name: Q1 2041 qualifying spend crosses the 3% tier; the credit is not due until 30 days after quarter end
+mailbox: evals/mailboxes/m15_quarterly_rebate
+as_of: '2041-04-20'
+mode: supervised
+expect:
+  key:
+    contract_id: CVN-HO-AIR-41
+    period: 2041-Q1
+    credit_type: rebate
+    class: cashback
+  verdict: finding
+  amount_usd: '737.09'
+  action: internal:track_credit
+why: QS = 10902.00 + 8193.75 + 5474.00 = 24569.75 >= 20000 -> 3% of all = 737.09; due 2041-04-30 > as_of.

@@ -1,0 +1,11 @@
+{
+  "_comment": "Copy to harness/.local-llm.json (gitignored) on your own machine only. Paths, not secrets. The grader's machine never has this file; with ANTHROPIC_API_KEY set it is ignored. All keys are optional.",
+  "env": {
+    "USERPROFILE": "C:\\Users\\<you>",
+    "HOME": "C:\\Users\\<you>",
+    "APPDATA": "C:\\Users\\<you>\\AppData\\Roaming",
+    "LOCALAPPDATA": "C:\\Users\\<you>\\AppData\\Local"
+  },
+  "claude_command": ["C:\\Users\\<you>\\.local\\bin\\claude.exe"],
+  "model": "claude-opus-5-5"
+}

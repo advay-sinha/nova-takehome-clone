@@ -1,0 +1,4 @@
+ingest batch_02: 2 documents, 2 new or changed, 0 unreadable
+extract: 1 unit(s), 0 from cache, 1 to call with 4 worker(s), 520 s budget
+extract 1/1 done bundle:batch_02/0001.eml (22.8 s, 5 facts)
+ingest: extraction {'done': 1, 'facts': 5, 'rejected': 0}

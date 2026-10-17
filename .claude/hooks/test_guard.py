@@ -15,14 +15,37 @@ def shell(command, tool='Bash'):
     return guard.block_reason({'tool_name':tool,'tool_input':{'command':command}})
 
 class GuardTests(unittest.TestCase):
+    def test_named_exception_project_runs(self):
+        allowed = [
+            '.venv/Scripts/python.exe evals/run_evals.py',
+            '.venv/Scripts/python.exe evals/run_evals.py -k e01',
+            '.venv/Scripts/python.exe harness/harness.py ingest evals/mailboxes/m01_wrong_bracket/batch_01 --state-dir out/state_eval/m01 2> out/state_eval/m01.log',
+            '.venv/Scripts/python.exe harness/harness.py feedback evals/feedback/m13_close_a_one_off.json --state-dir out/state_eval/m13',
+            '.venv/Scripts/python.exe harness/harness.py report --as-of 2041-04-30 --mode autonomous --state-dir out/state_eval/m01',
+            'python grader/run_grader.py --harness "python harness/harness.py" --data data/scenarios --key data/scenarios/answers --mode both --out report_card.json',
+            'PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe grader/run_grader.py --harness "python harness/harness.py" --data data/scenarios --key data/scenarios/answers --mode both --out report_card.json > report_card.txt',
+            '.venv/Scripts/python.exe tools/run_mailbox.py --data data/exam --harness harness/harness.py --out out/exam_report.json --sheet answer_sheet.json',
+            '.venv/Scripts/python.exe harness/harness.py ingest data/exam/batch_01 --state-dir out/state_exam',
+        ]
+        for command in allowed:
+            self.assertIsNone(shell(command), command)
+        still_blocked = [
+            'python harness/harness.py ingest evals/mailboxes/m01/batch_01 --state-dir out/state_eval/m && git push origin main',
+            'python harness/harness.py ingest C:/elsewhere/batch_01 --state-dir out/s',
+            'python harness/harness.py ingest data/exam/batch_01 --state-dir /tmp/s',
+            'python evals/run_evals.py; git push origin main',
+            'make eval', 'make grade', 'make sheet',
+            'python tools/preprocess.py --input data/scenarios', 'hf download x/y', 'git push origin main',
+            'export ANTHROPIC_API_KEY=example', 'claude login',
+        ]
+        for command in still_blocked:
+            self.assertIsNotNone(shell(command), command)
+
     def test_human_commands_blocked(self):
         commands = [
             'make grade MODE=both', 'make sheet', 'make eval', 'make run',
             'cd repo && make grade',
             'claude login', 'export ANTHROPIC_API_KEY=example', 'setx ANTHROPIC_API_KEY example',
-            'python harness/harness.py ingest data/exam/batch_01 --state-dir out/state',
-            '.venv/Scripts/python.exe harness/harness.py report --as-of 2031-02-28 --state-dir out/s',
-            'python3 tools/run_mailbox.py --data data/exam',
             'python3 tools/preprocess.py --input data/scenarios',
             './tools/train.py --config train.yaml',
             'python3 tools/prepare_embeddings.py',

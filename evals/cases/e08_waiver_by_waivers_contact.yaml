@@ -1,0 +1,13 @@
+name: the Schedule 1 waivers contact waives one delivery fee by AWB; it is billed
+mailbox: evals/mailboxes/m07_waiver_authorised
+as_of: '2041-04-30'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00180
+    class: waived_but_billed
+  verdict: finding
+  amount_usd: '85.00'
+  action: draft:dispute
+why: 'Tomas Reyes-Hale (Schedule 1: waivers) names AWB 817-40026100; its delivery fee 85.00 is billed. The second
+  delivery fee (817-40026105) is not waived.'

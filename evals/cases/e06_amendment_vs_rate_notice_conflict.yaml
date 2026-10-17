@@ -1,0 +1,15 @@
+name: signed amendment 4.95 vs the rates contact's notice 5.05; clause 11.2 ranks neither
+mailbox: evals/mailboxes/m05_amendment_vs_notice
+as_of: '2041-04-30'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00162
+    class: overcharge
+  verdict: conflict
+  amount_range:
+  - '7.14'
+  - '21.42'
+  action: escalate
+why: 'Billed 612.00 + 116.28 = 728.28. At 5.05: 606.00 + 115.14 = 721.14 -> 7.14. At 4.95: 594.00 + 112.86 = 706.86
+  -> 21.42.'

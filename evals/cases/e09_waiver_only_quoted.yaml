@@ -1,0 +1,12 @@
+name: a waiver seen only inside the shipper's forward; the original is not held
+mailbox: evals/mailboxes/m08_waiver_quoted_only
+as_of: '2041-05-31'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00195
+    class: waived_but_billed
+  verdict: cannot_determine
+  action: draft:request_document
+  missing_doc: original waiver email
+why: 'GLOSSARY Waivers: quoted inside someone else''s forward -> cannot_determine; ask for the original.'

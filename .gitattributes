@@ -1,0 +1,2 @@
+# Generated eval mailboxes are byte-exact fixtures (tests/offline/test_eval_cases.py rebuilds and compares them).
+evals/mailboxes/** -text

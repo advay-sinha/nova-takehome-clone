@@ -18,23 +18,10 @@ from __future__ import annotations
 import argparse
 import sys
 
+from nova.app import feedback, ingest, report
+from nova.llm import LLMError
+
 DEFAULT_STATE = ".state"
-
-
-def ingest(batch_dir: str, state_dir: str) -> None:
-    raise NotImplementedError(
-        f"ingest is not written yet: read the .eml files in {batch_dir} and keep what you learn under {state_dir}")
-
-
-def report(as_of: str, mode: str, state_dir: str) -> dict:
-    raise NotImplementedError(
-        f"report is not written yet: return the report.json dict for --as-of {as_of} in {mode} mode "
-        "(see grader/schema/report.schema.json and data/examples/*/expected_finding.json)")
-
-
-def feedback(feedback_file: str, state_dir: str) -> None:
-    raise NotImplementedError(
-        f"feedback is not written yet: store the decisions in {feedback_file} under {state_dir} so later reports use them")
 
 
 def main(argv=None) -> int:
@@ -63,6 +50,9 @@ def main(argv=None) -> int:
     except NotImplementedError as e:
         print(f"harness.py {a.cmd}: {e}", file=sys.stderr)
         return 3
+    except (ValueError, OSError, LLMError) as e:
+        print(f"harness.py {a.cmd}: {type(e).__name__}: {e}", file=sys.stderr)
+        return 2
     return 0
 
 

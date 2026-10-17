@@ -1,0 +1,8 @@
+ingest batch_01: 6 documents, 6 new or changed, 0 unreadable
+extract: 4 unit(s), 0 from cache, 4 to call with 4 worker(s), 519 s budget
+extract 1/4 FAILED bundle:batch_01/0001.eml: CLI exit 3221226505: 
+extract 2/4 FAILED bundle:batch_01/0003.eml: CLI exit 3221226505: 
+extract 3/4 FAILED bundle:batch_01/0002.eml: CLI exit 3221226505: 
+extract 4/4 done long:batch_01/0001.eml#Agreement-CVN-HO-AIR-41.pdf@1-4 (84.1 s, 47 facts)
+ingest: extraction {'failed': 3, 'done': 1, 'facts': 47, 'rejected': 0}
+ingest: WARNING 0 unit(s) pending and 3 failed; they are retried by the next step

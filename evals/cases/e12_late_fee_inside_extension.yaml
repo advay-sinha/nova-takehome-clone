@@ -1,0 +1,12 @@
+name: due date extended by the payment-terms contact, paid inside it, late fee billed anyway
+mailbox: evals/mailboxes/m10_late_fee_after_extension
+as_of: '2041-04-30'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00215
+    class: late_fee_not_owed
+  verdict: finding
+  amount_usd: '39.82'
+  action: draft:dispute
+why: 'Extended due 2041-03-31, paid 2041-03-28: -3 days late, no fee. Billed 2.00% x 1990.80 = 39.82.'

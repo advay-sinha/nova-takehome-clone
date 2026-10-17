@@ -1,0 +1,10 @@
+name: 'same mailbox, reported before the amendment is received: the MSA rate was billed, nothing to find'
+mailbox: evals/mailboxes/m04_backdated_amendment
+as_of: '2041-06-15'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00150
+    class: overcharge
+  verdict: no_finding
+why: as_of 2041-06-15 is before the amendment's receipt (2041-06-21); 4.70 is the Appendix 1 H1 rate.

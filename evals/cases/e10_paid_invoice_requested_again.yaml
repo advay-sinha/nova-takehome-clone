@@ -1,0 +1,12 @@
+name: AP register shows CVN-41-00188 paid; the carrier resends it asking for payment
+mailbox: evals/mailboxes/m09_resent_invoices
+as_of: '2041-04-30'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00188
+    class: duplicate
+  verdict: finding
+  amount_usd: '1235.25'
+  action: draft:dispute
+why: 'Same invoice number, first copy paid 2041-03-08, resend asks for payment: the invoice total 1235.25.'

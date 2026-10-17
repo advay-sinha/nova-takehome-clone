@@ -1,0 +1,8 @@
+ingest batch_01: 7 documents, 7 new or changed, 0 unreadable
+extract: 5 unit(s), 2 from cache, 3 to call with 4 worker(s), 519 s budget
+extract 1/5 done bundle:batch_01/0001.eml (cached, 1 facts)
+extract 2/5 done long:batch_01/0001.eml#Agreement-CVN-HO-AIR-41.pdf@1-4 (cached, 47 facts)
+extract 3/5 done bundle:batch_01/0004.eml (9.3 s, 2 facts)
+extract 4/5 done bundle:batch_01/0002.eml (10.5 s, 1 facts)
+extract 5/5 done bundle:batch_01/0003.eml (14.9 s, 6 facts)
+ingest: extraction {'done': 5, 'facts': 57, 'rejected': 0}

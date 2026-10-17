@@ -1,0 +1,10 @@
+name: an unpaid invoice resent 'for your records' is not a duplicate
+mailbox: evals/mailboxes/m09_resent_invoices
+as_of: '2041-04-30'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00189
+    class: duplicate
+  verdict: no_finding
+why: 'GLOSSARY Duplicates: a copy of an unpaid invoice marked for your records is fine.'

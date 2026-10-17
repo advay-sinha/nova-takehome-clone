@@ -1,0 +1,4 @@
+FAIL  e01_wrong_bracket_rate.yaml: 212 kg billed at the 45-99.5 kg rate; the 64 kg consignment beside it is right
+      amount 148.40, expected 176.59
+
+0 of 1 cases pass (1 of them yours)

@@ -1,0 +1,13 @@
+name: 212 kg billed at the 45-99.5 kg rate; the 64 kg consignment beside it is right
+mailbox: evals/mailboxes/m01_wrong_bracket
+as_of: '2041-04-30'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00117
+    class: overcharge
+  verdict: finding
+  amount_usd: '176.59'
+  action: draft:dispute
+why: 'Appendix 1 SEA1-DEN3 100-299.5 kg H1 = 5.10: freight 1229.60 - 1081.20 = 148.40; fuel 19.00% 233.62 - 205.43
+  = 28.19; total 176.59. Line 3 (64 kg at 5.30, 45-99.5 kg) is correct.'

@@ -1,0 +1,12 @@
+{
+  "model": "claude-opus-5-5",
+  "effort": "medium",
+  "max_tokens": 16000,
+  "request_timeout_s": 240,
+  "sdk_max_retries": 2,
+  "server_fallbacks": "default",
+  "concurrency": {"sdk": 6, "cli": 4},
+  "step_budget_s": 540,
+  "max_calls_per_step": 600,
+  "max_cli_arg_chars": 30000
+}

@@ -1,0 +1,39 @@
+{
+ "schema_version": "1.0",
+ "world": "EVAL-M13",
+ "after_batch": "batch_01",
+ "decided_at": "2041-04-05T14:30:00Z",
+ "decided_by": {
+  "name": "Joel Varga",
+  "role": "AP Lead",
+  "entity": "HLD-US"
+ },
+ "items": [
+  {
+   "item_id": "fb-m13-a",
+   "finding_key": {
+    "invoice_id": "CVN-41-00240",
+    "class": "overcharge"
+   },
+   "solicited": true,
+   "decision": "close",
+   "fact": {
+    "type": "dispute_closed",
+    "subject": {
+     "invoice_id": "CVN-41-00240"
+    },
+    "value": {
+     "status": "closed"
+    },
+    "evidence": "Settled with the carrier by phone for this invoice only"
+   },
+   "scope": {
+    "kind": "one_off",
+    "applies_to": {
+     "invoice_id": "CVN-41-00240"
+    }
+   },
+   "note": "We settled CVN-41-00240 with Corvane by phone. Close this one invoice; it says nothing about the BOS2-ATL4 rate."
+  }
+ ]
+}

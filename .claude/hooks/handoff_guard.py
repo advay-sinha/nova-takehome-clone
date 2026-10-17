@@ -38,6 +38,23 @@ def block_reason(payload: dict) -> str | None:
             return None
         if re.fullmatch(r'\s*[\w./\\:-]*python[\d.]*(?:\.exe)?\s+[\w./\\-]+\.py\s+--help\s*', command, flags):
             return None
+    # Named user exception (2026-10-17, .claude/rules/human-execution.md): the project runs the submission needs:
+    # eval runs, practice run/grade, the exam answer sheet, harness steps on evals/, data/scenarios and data/exam.
+    # One command at a time (no chaining), python entry points only (no make), and every path argument inside the
+    # project's run areas. Secrets, model downloads, training and publishing stay gated below.
+    if not re.search(r'[;&|\n`]', command) and not re.search(r'\bmake\b', command, flags):
+        py = r'\s*(?:time\s+)?(?:PYTHONIOENCODING=utf-?8\s+)?[\w./\\:-]*python[\d.]*(?:\.exe)?\s+'
+        entry = (r'(?:evals[/\\]run_evals\.py|grader[/\\]run_grader\.py|tools[/\\]run_mailbox\.py|'
+                 r'harness[/\\]harness\.py\s+(?:ingest|report|feedback))(?:\s|$)')
+        m = re.match(py + entry + r'(.*)$', command, flags)
+        if m:
+            area = r'"?(?:evals[/\\]|data[/\\](?:scenarios|exam)\b|out[/\\]|report_card\.(?:json|txt)|answer_sheet\.json|harness[/\\]harness\.py|python\b)'
+            words = [w for w in re.split(r'\s+', m.group(1)) if w]
+            values = [w.lstrip('2>').lstrip('>') for w in words if not w.startswith('-')]
+            values = [v.strip('"') for v in values if v and not re.fullmatch(
+                r'\d{4}-\d{2}-\d{2}|supervised|autonomous|both|[\d.]+|[\w-]+', v.strip('"'))]
+            if all(re.match(area, v, flags) for v in values):
+                return None
     # Not gated: offline checks/tests, make setup/validate/clean and dependency installs.
     # Human-owned: API/service setup, API-backed runs, ML/AI preprocessing, model preparation,
     # training and publishing.

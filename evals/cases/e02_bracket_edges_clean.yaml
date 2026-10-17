@@ -1,0 +1,11 @@
+name: 100.0 kg and 99.5 kg sit exactly on bracket edges and are billed correctly
+mailbox: evals/mailboxes/m02_bracket_edges_clean
+as_of: '2041-04-30'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00131
+    class: overcharge
+  verdict: no_finding
+why: '100.0 kg is in 100-299.5 (5.10) and 99.5 kg in 45-99.5 (5.80); fuel April 19.25% on each freight line matches.
+  Near miss: no finding.'

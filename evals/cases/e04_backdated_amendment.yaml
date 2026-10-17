@@ -1,0 +1,13 @@
+name: signed amendment received in batch_02, effective before the consignment
+mailbox: evals/mailboxes/m04_backdated_amendment
+as_of: '2041-06-30'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00150
+    class: overcharge
+  verdict: finding
+  amount_usd: '64.53'
+  action: draft:dispute
+why: 'Amendment No. 1 (signed, effective 2041-05-01) sets BOS2-ATL4 100-299.5 kg to 4.40; collected 2041-05-06:
+  (846.00 + 164.97) - (792.00 + 154.44) = 64.53.'

@@ -1,0 +1,12 @@
+name: the same feedback removes invoice A
+mailbox: evals/mailboxes/m13_one_off_feedback
+as_of: '2041-05-31'
+mode: supervised
+feedback:
+  batch_01: evals/feedback/m13_close_a_one_off.json
+expect:
+  key:
+    invoice_id: CVN-41-00240
+    class: overcharge
+  verdict: no_finding
+why: 'decision close, decided 2041-04-05, before as_of: A (35.70 before feedback) is closed.'

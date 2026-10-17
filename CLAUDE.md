@@ -23,12 +23,12 @@ Never ask the user to paste an API key or OAuth token. Assume Claude Pro for dev
 ## Architecture
 
 - Python 3.11 CLI: preserve `ingest`, `report --as-of --mode`, and `feedback` arguments.
-- SQLite holds source occurrences, canonical page text, versioned facts, feedback, chunks, embeddings and report history. All mutable runtime state goes under `--state-dir`; imports/assets resolve from script location.
+- SQLite holds source occurrences, canonical page text, versioned facts, feedback, extraction units, a response cache and report history. All mutable runtime state goes under `--state-dir`; imports/assets resolve from script location.
 - Reuse the canonical document reader for citation fidelity. Support email, PDF, XLSX and image-only PDF OCR.
 - Extract typed facts with source references. Keep original email metadata; content deduplication must not erase a second payment request.
 - Retrieve complete governing and ledger records through parameterized SQL. Hard-filter entity/contract and knowledge dates before semantic ranking. Do not hide conflicting applicable instruments.
-- Add local MiniLM embeddings, lexical search and rank fusion for supplementary passages. Ship tested model/tokenizer bytes and license/checksums; no evaluator-time downloads. Do not train a new model by default.
-- Build RAG evidence bundles containing mandatory records plus supplementary matches. Claude proposes source-backed interpretation only. Python resolves authority/precedence, calculates money and enforces action policy.
+- Built path: Claude transcribes every document in full into typed, quoted facts; Python reads all of them, resolves authority/precedence, calculates money and enforces action policy.
+- Not built (decision 2026-10-18, `.claude/experiments/EXP-001-supplementary-retrieval.md`): MiniLM embeddings, lexical search, rank fusion and RAG evidence bundles. No failure so far came from missing context. Add them only for a measured miss; if added, ship tested model bytes with license/checksums and no evaluator-time downloads.
 - Preserve parent clauses, table headers, exact spans and page numbers. Search top-k never limits ledger aggregation or governing-document coverage.
 - Validate observed source arithmetic and critical fields; never change an invoice to make it match a contract. Permit at most one targeted field recheck per document/version within the shared model-call/time budget. Model agreement does not establish truth.
 - Produce internal traces of fact versions, governing terms, typed operands, rounding/FX and action gates under `--state-dir/traces/`. Replay with allowlisted formulas; no `eval` and no extra fields in official report JSON.

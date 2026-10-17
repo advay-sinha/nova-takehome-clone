@@ -1,0 +1,12 @@
+name: scanned invoice (no text layer) bills the H2 rate for an H1 collection
+mailbox: evals/mailboxes/m12_scanned_invoice
+as_of: '2041-06-30'
+mode: supervised
+expect:
+  key:
+    invoice_id: CVN-41-00230
+    class: overcharge
+  verdict: finding
+  amount_usd: '5.39'
+  action: draft:dispute
+why: 'BOS2-ATL4 0-44.5 kg H1 5.90, June fuel 19.75%: (181.50 + 35.85) - (177.00 + 34.96) = 5.39.'

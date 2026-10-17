@@ -1,0 +1,15 @@
+name: feedback closes invoice A one-off; invoice B in batch_02 repeats A's pattern
+mailbox: evals/mailboxes/m13_one_off_feedback
+as_of: '2041-05-31'
+mode: supervised
+feedback:
+  batch_01: evals/feedback/m13_close_a_one_off.json
+expect:
+  key:
+    invoice_id: CVN-41-00255
+    class: overcharge
+  verdict: finding
+  amount_usd: '35.85'
+  action: draft:dispute
+why: 'The KAM is not the rates contact, so 4.70 applies. B: (735.00 + 143.33) - (705.00 + 137.48) = 35.85. The one-off
+  close names only CVN-41-00240.'

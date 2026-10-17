@@ -5,5 +5,8 @@ __pycache__/
 .env
 *.pyc
 prompt.txt
+# Local-only Claude Code CLI back end settings (D-002); never on the grader's machine
+harness/.local-llm.json
 # Added by ggshield
 .cache_ggshield
+summary.txt

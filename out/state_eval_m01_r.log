@@ -1,0 +1,6 @@
+extract: 3 unit(s), 0 from cache, 3 to call with 4 worker(s), 420 s budget
+extract 1/3 done bundle:batch_01/0001.eml (10.1 s, 1 facts)
+extract 2/3 done bundle:batch_01/0003.eml (10.8 s, 3 facts)
+extract 3/3 done bundle:batch_01/0002.eml (19.6 s, 10 facts)
+report: extraction {'done': 3, 'facts': 14, 'rejected': 0}
+report 2041-04-30 supervised: 6 documents received by then; 1 item(s)

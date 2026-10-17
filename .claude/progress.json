@@ -1,81 +1,151 @@
 {
   "schema_version": "1.0",
-  "current_phase": "00",
+  "current_phase": "09",
   "setup_package": "created",
-  "harness_status": "upstream_stub",
+  "harness_status": "ingest+extraction+verification; all classes incl. margin step-down; report with actions, confidence, history; feedback applied; traces replayable; own eval set built, not yet run",
   "phases": {
     "00": {
-      "status": "IN_PROGRESS",
+      "status": "IMPLEMENTED",
       "evidence": [
+        "docs/REQUIREMENTS.md: requirement checklist from brief/glossary/schema/grader/tools plus module map and build order",
+        "Grader facts checked: run_grader passes PATH+ANTHROPIC_* with fresh HOME; run_mailbox passes full env; 600 s/step; escalation rate over present items in both modes",
+        "LLM back end decided: D-002 (auto SDK / local claude -p)",
         "VERIFIED_OFFLINE 2026-10-13: .venv Python 3.12.9 imports all 6 pinned requirements",
         "VERIFIED_OFFLINE 2026-10-13: check_setup.py PASS; test_guard.py 7/7; tests/offline 4/4",
         "make is not installed on this Windows host; Makefile assumes .venv/bin/python"
       ]
     },
     "01": {
-      "status": "NOT_STARTED",
-      "evidence": []
+      "status": "VERIFIED_OFFLINE",
+      "evidence": [
+        "harness/nova: app.py (commands), store.py (SQLite + content-addressed blobs), reader.py (occurrences, UTC receipt), textlayer.py (vendored grader/extract.py), ocr.py (RapidOCR line grouping), config.py",
+        "tests/offline/test_reader.py + test_cli.py on an original synthetic mailbox: grader-page parity, quote resolves via grader Mailbox.check, UTC receipt (+0530 case), resend kept as separate occurrence, idempotent re-ingest, arbitrary cwd, JSON-only schema-valid stdout, bad input exit 2, OCR of a synthetic scan",
+        "2026-10-16: python -m unittest discover -s tests/offline -> 16/16 OK",
+        "HUMAN_RAN H-001, verified read-only: practice 163 / exam 86 documents match the inventory, 0 unreadable, scans OCR-read with amounts intact"
+      ]
     },
     "02": {
-      "status": "NOT_STARTED",
-      "evidence": []
+      "status": "VERIFIED_OFFLINE",
+      "evidence": [
+        "02a IMPLEMENTED + VERIFIED_OFFLINE: harness/nova/llm (base: request/result, CallBudget, run_many, cache keys; sdk: output_config json_schema + server fallbacks with plain retry; cli: isolated claude -p with --json-schema, no tools/settings/MCP, empty cwd, stray key removed, .local-llm.json env overrides); llm_config.json (model claude-opus-5-5, effort medium); tests/offline/test_llm.py 14/14",
+        "Live CLI check prepared as H-002 (harness/live_check.py, --stripped simulates make grade's environment)",
+        "02b IMPLEMENTED + VERIFIED_OFFLINE: harness/nova/extract (schema.py: one shared fact schema with $defs, 17.8k chars, structured-output subset only, plus a spreadsheet column-map schema; prompts.py: data-not-instructions, verbatim quotes, no arithmetic; validate.py: quote-on-page, numbers and dates on page, NFKC + space-free OCR matching, per-document date order with same-sender hints, statuses ok/unverified/rejected); tests/offline/test_extract_validate.py 12/12",
+        "02c IMPLEMENTED + VERIFIED_OFFLINE: extract/run.py (units bundle/long/table/clone, response cache, facts and doc_kinds tables, pending on budget, 2 attempts max, schema-checked answers, LLMUnavailable fails loudly after storing documents), extract/tables.py (header-label column mapping, rows read from the workbook by position, quote = text-layer row), ingest/report wired with step budgets; NOVA_LOCAL_LLM points tests at tests/offline/fake_claude.py; tests/offline/test_extract_run.py 7/7; full suite 51/51",
+        "H-003 live run verified; then IMPLEMENTED + VERIFIED_OFFLINE: per-unit commit as each answer arrives (llm.iter_completed) with 'extract k/N done' stderr progress, long PDFs in 4-page parallel chunks (long:<doc>@a-b), validator fixes (sentence-final date boundary; values may sit on another page of the same document); suite 55/55",
+        "02d IMPLEMENTED + VERIFIED_OFFLINE: money.py (Decimal, ROUND_HALF_UP q2); extract/constraints.py (exact line arithmetic qty x rate and base x pct, lines vs subtotal/total/subtotal+tax, subtotal+tax=total; extraction_suspect vs document_inconsistent, never altering values); recheck unit 'recheck:<doc>' at most once per document, re-read without showing current values, accepted only if validated and arithmetic consistent, originals kept as 'superseded', else 'unresolved' and originals stay in use; doc_checks table; tests test_constraints.py 8/8 + 2 recheck tests; suite 65/65. Live H-003 invoices: 27/27 consistent (after accepting lines that include a printed GST line)",
+        "Phase 02 exit: schemas/validation/constraints/recheck verified offline; live extraction of practice batch_01 verified (H-003); live recheck quality NOT_RUN (no live document needed one)",
+        "Validator tests caught two real weaknesses before use: a wrong date passing via the other day/month order, and a contract late-fee percentage not checked; both fixed. Real-mailbox check: 24 exam documents show DMY order, 2 undecided -> same-sender hint",
+        "Corpus survey for schema design: document families = MSA, amendment, rate notice, waiver thread, due-date extension, carrier status email, invoice PDF (several layouts incl. INR and scan), monthly statement XLSX, credit note, AWB (master/house), DG declaration, tracking export, AP register; exam MSAs share the template with reworded clauses and their own parameters"
+      ]
     },
     "03": {
-      "status": "NOT_STARTED",
-      "evidence": []
+      "status": "DEFERRED",
+      "evidence": [
+        "Not built by decision (2026-10-18): no practice or eval failure came from missing context; .claude/experiments/EXP-001-supplementary-retrieval.md"
+      ]
     },
     "04": {
-      "status": "NOT_STARTED",
-      "evidence": []
+      "status": "DEFERRED",
+      "evidence": [
+        "Not built by decision (2026-10-18): no practice or eval failure came from missing context; .claude/experiments/EXP-001-supplementary-retrieval.md"
+      ]
     },
     "05": {
-      "status": "NOT_STARTED",
-      "evidence": []
+      "status": "IN_PROGRESS",
+      "evidence": [
+        "IMPLEMENTED: world.py (knowledge cut-off by receipt, canonical instrument per contract, rate bands/periods, fuel, FX, accessorials, Annex E aliases, Schedule 1 authority by sender+category, held-document check, pickup priority tracking > carrier email > AWB > invoice); rules/{overcharge,duplicate,waiver,late_fees,cashback,expiry}.py; report.py (INR once, actions per mode with $5,000 sum and five unattended checks, heuristic confidence, stable ids/supersedes/retro history, citation resolution, schema validation, traces under --state-dir/traces); vendored report.schema.json",
+        "VERIFIED_OFFLINE: tests/offline/test_overcharge.py 15 (hand-worked amounts: wrong rate+fuel, band boundary, minimum, period, signed/unsigned amendment, notice authority, unranked conflict range, ranked notice, missing annex, dry ice vs DG, peak months, INR once vs per line, as_of cut-off); suite 80/80",
+        "Live check on a copy of the H-003 state, as of 2035-05-31: 11/11 practice keys due after batch_01 match (6 findings with exact amounts, decoys and clean controls left alone); both modes 0 schema errors and 0 citation errors (grader validators); actions match the key",
+        "World bugs found on live data and fixed: cover-email contract fact shadowed the agreement (0 bands); model's 'not held' flag noisy -> holds() decided in Python",
+        "Trace replay: trace.py allowlisted formulas (no eval); 14/14 live batch_01 items replay to the reported amount; tampered operand, tampered amount and unknown formula detected (test_trace.py)",
+        "Late fees: target invoice taken from the label when refers_to_invoice is empty (found by test_detectors)",
+        "Margin step-down (cashback margin_step_down): threshold basis read from the clause (carrier cost / shipments / qualifying spend; contract year, quarter, calendar year or term window; 'exceeds' strict), invoices after the crossing one re-priced at the stepped-down % (base from base_amount, COST lines, or billed/pct), summed per closed quarter minus margin credits, draft:claim_credit; replay formula cashback.margin_step_down. No supplied MSA applies a margin (all say 'Not applicable'); tests only. test_detectors MarginStepDownTests 6, mutation-checked (window reset, strict threshold)",
+        "Waiver rule: any text in the extracted condition blocked the waiver; live batch_02 showed the model files billing notes there ('you can short-pay that line'). Now waiver.real_condition() requires requirement wording or non-handling text; schema description added; tests test_billing_note_is_not_a_condition, test_real_condition_wording. Found with the practice key during H-004 verification; the fix is general (no practice id or text in code)",
+        "Qualifying spend counted a resent copy of the same invoice number twice; now one per invoice number (test_resent_invoice_counts_once_in_spend)",
+        "Live copy re-check after these changes (report.build on a scratch copy of the H-003 state, no model calls): batch_01 as of 2035-05-31, 30/30 practice answers consistent in both modes, 0 extra findings, traces 7/7 replay"
+      ]
     },
     "06": {
-      "status": "NOT_STARTED",
-      "evidence": []
+      "status": "VERIFIED_LIVE_PARTIAL",
+      "evidence": [
+        "H-004 VERIFIED: practice feedback + batch_02 live (244 s, 499 facts, 0 rejected; 509/509 ok, 29/29 invoices consistent). Offline recomputation on a copy, both dates and modes: 60/60 practice answers, 0 extra, traces 7/7 and 17/17; grader score() on those reports 99.8/100, hard gates clear, sheet check 9/9 (not the official card)",
+        "IMPLEMENTED: feedback.py (FeedbackState: decided_at cut-off; confirm/sender_authority grants by person+category+contract+dates; close/reject/override_amount on their own key; rate_accepted standing on contract+lane+dates; resolve_conflict precedence; one_off_approval waiver_scope on its key only; learned_at); World.authorized() used by waivers, rate notices and extensions; report history with supersedes/retro/stable ids; per-item schema validation (one bad item never drops the report); candidate de-duplication per key",
+        "VERIFIED_OFFLINE: tests/offline/test_report_feedback.py 13 (exact $5,000 and summed findings -> human_review both modes; supervised never executes; untracked pickup holds autonomous; conflict escalates and does not block another lane; missing document request draft/execute; backdated amendment -> supersedes while the old date keeps its answer; every feedback decision incl. decided_at cut-off, category-limited authority, close only that key, rate_accepted lane/dates, resolve_conflict, one-off approval not spreading to sibling B); test_detectors.py 27; suite 123/123",
+        "Live: practice feedback on a copy of the batch_01 state removes TX-US-2035-0210 as of 2035-09-30 but not 2035-05-31; batch_01 both modes still 7/7 exact"
+      ]
     },
     "07": {
-      "status": "NOT_STARTED",
-      "evidence": []
+      "status": "VERIFIED_LIVE",
+      "evidence": [
+        "IMPLEMENTED: 18 original cases evals/cases/e01..e18 on 15 original mailboxes (evals/build_mailboxes.py; invented carrier/shipper/contract wording; two invoice layouts incl. dash dates; one scan; amendment across batches; conflict; unauthorised notice; waiver authorised/quoted; duplicate resend paid vs copy; late fee inside extension; injected instructions; one-off feedback pair; notice deadline; rebate). Amounts hand-worked in each case's why, cross-checked with plain Decimal maths",
+        "VERIFIED_OFFLINE: tests/offline/test_eval_cases.py 4 (text layer readable, <=1 scan per mailbox, ideal item passes run_evals.check and perturbed ones fail, byte-identical rebuild); tests/offline/test_metamorphic.py 7 (six families + parent worked by hand; families 2 and 6 fail when any sender is treated as authorised); suite 142/142",
+        "Generalisation fix found while building the cases: validator did not accept 09-Mar-2041, Mar 04, 2041 or 7-April-2041 date forms; added with a test",
+        "H-005 attempt 1 failed in 4 s, no model calls: the handoff passed a backslashed harness path and the runner's POSIX shlex dropped the backslash. Handoff corrected to use the runner default; same caution in H-006",
+        "NOT_RUN: evals/results.json (H-005, human runs evals/run_evals.py); retrieval metrics (no retrieval built; .claude/experiments/EXP-001 records NOT_RUN and cross-encoder DEFERRED)"
+      ]
     },
     "08": {
-      "status": "NOT_STARTED",
-      "evidence": []
+      "status": "VERIFIED_LIVE",
+      "evidence": [
+        "answer_sheet.json + out/exam_report.json (2031-02-28, supervised): total_savings 8165.33; schema and every citation valid (check_submission); exam state rebuilt from cache 49/49 units, 898 facts ok, 25/25 invoices consistent"
+      ]
     },
     "09": {
-      "status": "NOT_STARTED",
-      "evidence": []
+      "status": "IMPLEMENTED",
+      "evidence": [
+        "Final SOLUTION.md, DESIGN.md, AI_USE.md, evals/CASES.md; tools/check_submission.py 9/9; suite 156/156"
+      ]
     }
   },
   "open_handoffs": [],
-  "live_verification": "NOT_RUN",
-  "api_route": "offline_no_key (see .claude/decisions/D-001-offline-development.md)",
-  "next_action": "Phase 00: requirement checklist and module map; then phase 01 readers/state. API route decided: offline (D-001).",
+  "closed_handoffs": [
+    "H-006-practice-grade (VERIFIED 2026-10-18: 99.8/100, sheet check 9/9; chunk-merge bug fixed after an 86.0 run)",
+    "H-005-run-original-evals (VERIFIED 2026-10-17: 20/20 after general fixes; first run 9/20)",
+    "H-004-live-practice-batch2-and-feedback (VERIFIED 2026-10-17: 244 s, 499 facts, 0 rejected; recomputed practice reports 60/60, offline score() 99.8)",
+    "H-003-live-extraction-practice-batch1 (VERIFIED 2026-10-17: 399 s, 44 units, 917 facts, 0 rejected; 6 unverified traced to validator bugs, fixed; agreement tables complete)",
+    "H-001-reader-check-real-mailboxes (VERIFIED 2026-10-16: 163 practice / 86 exam documents, 0 unreadable, both scans OCR-read)",
+    "H-002-live-llm-check (VERIFIED 2026-10-16: CLI back end PASS in normal and stripped environments, claude-opus-5-5, 4.4-7.8 s per tiny call)"
+  ],
+  "deferred_tasks": [],
+  "live_verification": "Practice grade 99.8/100 (official grader); eval set 20/20 (official runner); exam sheet produced and validated. Local runs via the Claude Code CLI back end; the evaluator's SDK path is not run locally.",
+  "api_route": "auto: Anthropic SDK when ANTHROPIC_API_KEY is set, else local Claude Code CLI (see .claude/decisions/D-002-llm-backend-autoselect.md; supersedes D-001)",
+  "next_action": "User pushes and submits. Optional: export the ChatGPT conversation into ai_log/chatgpt/.",
   "setup_revision": "verifiable-audit",
   "features": {
     "decision_traces": {
-      "status": "PLANNED",
-      "evidence": []
+      "status": "VERIFIED_OFFLINE",
+      "evidence": [
+        "trace.py allowlisted replay; test_trace.py; live batch_01 copy 7/7 replay"
+      ]
     },
     "constraint_verification": {
-      "status": "PLANNED",
-      "evidence": []
+      "status": "VERIFIED_OFFLINE",
+      "evidence": [
+        "extract/constraints.py + one bounded recheck; test_constraints.py; live H-003 invoices 27/27 consistent; live recheck NOT_RUN"
+      ]
     },
     "metamorphic_evaluations": {
-      "status": "PLANNED",
-      "evidence": []
+      "status": "VERIFIED_OFFLINE",
+      "evidence": [
+        "tests/offline/test_metamorphic.py six families (offline, invented facts); end-to-end counterparts in evals/cases pending H-005"
+      ]
     },
     "cross_encoder_reranker": {
-      "status": "OPTIONAL_NOT_STARTED",
+      "status": "DEFERRED",
       "enabled": false,
-      "evidence": []
+      "evidence": [
+        ".claude/experiments/EXP-001-supplementary-retrieval.md: no retrieval baseline and no diagnosed ranking miss"
+      ]
     },
     "custom_training": {
       "status": "OUT_OF_SCOPE",
       "evidence": []
     }
   },
-  "experiments": []
+  "experiments": [
+    ".claude/experiments/EXP-001-supplementary-retrieval.md (PLANNED; all NOT_RUN)"
+  ],
+  "closed_tasks": [
+    "FAKE_KEY note in DESIGN.md: no longer needed (2026-10-18). tests/offline/test_ai_log_export.py now builds its fake secrets in code and does not read .env"
+  ]
 }
