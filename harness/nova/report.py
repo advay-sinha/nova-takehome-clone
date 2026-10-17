@@ -66,7 +66,21 @@ def _to_usd(world: World, c: Candidate) -> None:
 
 
 # ---- actions --------------------------------------------------------------------------------------------------------
-def _unattended_failures(world: World, c: Candidate, outbound_sum: Decimal, conflicts: set) -> list[str]:
+def _shares_conflict(c: Candidate, conflict: Candidate) -> bool:
+    if key_str(c) == key_str(conflict):
+        return True
+    if not c.contract_id or c.contract_id != conflict.contract_id:
+        return False
+    scopes = c.signals.get("pricing_scopes") or []
+    disputed = conflict.signals.get("conflict_scopes") or []
+    if not scopes or not disputed:
+        return bool(c.lane and c.lane == conflict.lane)
+    return any(a["lane"] == b["lane"] and a["charge"] == b["charge"]
+               and (a["period"] is None or b["period"] is None or a["period"] == b["period"])
+               for a in scopes for b in disputed)
+
+
+def _unattended_failures(world: World, c: Candidate, outbound_sum: Decimal, conflicts: list[Candidate]) -> list[str]:
     fails = []
     if c.verdict != "cannot_determine" and c.missing_doc:
         fails.append("missing document")
@@ -75,8 +89,8 @@ def _unattended_failures(world: World, c: Candidate, outbound_sum: Decimal, conf
         fails.append(f"pickup date not from tracking or a carrier email: {sorted(sources - TRUSTED_PICKUP)}")
     if c.signals.get("unverified"):
         fails.append("relies on a field that could not be verified on its page")
-    if (c.contract_id, c.lane) in conflicts and c.lane:
-        fails.append("open conflict on the same contract and lane")
+    if any(_shares_conflict(c, conflict) for conflict in conflicts):
+        fails.append("open conflict on the same contract, lane, charge and rate period")
     if outbound_sum >= THRESHOLD:
         fails.append(f"outbound total {outbound_sum} is $5,000 or more")
     contract = world.contract_of(c.contract_id)
@@ -97,7 +111,7 @@ def _actions(world: World, cands: list[Candidate], mode: str) -> None:
         if c.verdict == "finding" and c.outbound and c.amount_usd is not None:
             group = key_str(c) if c.cls == "cashback" else c.key.get("invoice_id")
             sums[group] = sums.get(group, Decimal("0")) + c.amount_usd
-    conflicts = {(c.contract_id, c.lane) for c in cands if c.verdict == "conflict"}
+    conflicts = [c for c in cands if c.verdict == "conflict"]
     for c in cands:
         group = key_str(c) if c.cls == "cashback" else c.key.get("invoice_id")
         if c.verdict == "conflict":
@@ -113,7 +127,7 @@ def _actions(world: World, cands: list[Candidate], mode: str) -> None:
             elif mode == "supervised":
                 c.signals["action"] = f"draft:{c.outbound}"
             else:
-                fails = _unattended_failures(world, c, total, conflicts - ({(c.contract_id, c.lane)} if c.verdict == "conflict" else set()))
+                fails = _unattended_failures(world, c, total, conflicts)
                 c.signals["unattended_failures"] = fails
                 c.signals["action"] = "human_review" if fails else f"execute:{c.outbound}"
         else:
@@ -188,6 +202,15 @@ def build(store, as_of: str, mode: str, hooks=None) -> dict:
     for c in cands:                                    # one item per key (a resent invoice is assessed twice)
         unique.setdefault(key_str(c), c)
     cands = world.feedback.post(world, list(unique.values()))   # close / reject / override_amount on their keys
+    for c in cands:
+        evidence = _resolvable(store, c.evidence)
+        valid = {(ev["doc"], ev["page"], ev["quote"]) for ev in evidence}
+        rejected = [ev for ev in c.evidence
+                    if (ev.get("doc"), ev.get("page") or 1, ev.get("quote") or "") not in valid]
+        if rejected:
+            c.signals["unverified"] = True
+            c.trace["rejected_evidence"] = rejected
+        c.evidence = evidence
     _actions(world, cands, mode)
     previous = {r["key"]: r for r in store.db.execute(
         "SELECT * FROM report_history WHERE mode = ? AND as_of < ? ORDER BY as_of", (mode, as_of))}
@@ -200,11 +223,11 @@ def build(store, as_of: str, mode: str, hooks=None) -> dict:
             continue
         key = key_str(c)
         amount = c.amount_str()
-        evidence = _resolvable(store, c.evidence)
+        evidence = c.evidence
         needed = 2 if c.verdict == "conflict" else 1
-        if len(evidence) < needed:          # never let a citation problem invalidate the whole report
-            c.trace["unresolved_evidence_kept"] = True
-            evidence = [e for e in c.evidence if e.get("quote")][:max(needed, len(c.evidence))] or c.evidence
+        if len(evidence) < needed:
+            print(f"report: dropped {key}: fewer than {needed} resolvable evidence entries", file=sys.stderr)
+            continue
         item = {"id": key, "class": c.cls, **{k: v for k, v in c.key.items() if k != "class"},
                 "verdict": c.verdict, "amount_usd": amount if c.verdict == "finding" else None,
                 "amount_range": [money_str(x) for x in c.amount_range] if c.amount_range else None,

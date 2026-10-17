@@ -24,7 +24,7 @@ SCHEMA = {"type": "object", "properties": {"n": {"type": "integer"}}, "required"
 REQ = LLMRequest(purpose="test", system="Return n.", user="document text", schema=SCHEMA)
 
 FAKE_CLAUDE = textwrap.dedent('''
-    import json, os, sys
+    import json, os, signal, sys
     args = sys.argv[1:]
     doc = sys.stdin.read()
     mode = os.environ.get("FAKE_MODE", "structured")
@@ -33,7 +33,9 @@ FAKE_CLAUDE = textwrap.dedent('''
         n = int(open(counter).read() or 0) + 1 if os.path.exists(counter) else 1
         open(counter, "w").write(str(n))
         if mode == "crash" or (mode == "crash_once" and n == 1):
-            sys.exit(3221226505)          # Windows fail-fast, no output
+            if os.name == "nt":
+                sys.exit(3221226505)      # Windows fail-fast, no output
+            os.kill(os.getpid(), signal.SIGTERM)  # POSIX reports a negative signal return code
         if mode == "crash_once":
             mode = "structured"
     need = ["-p", "--output-format", "json", "--json-schema", "--tools", "--restricted", "--strict-mcp-config",
@@ -57,8 +59,10 @@ FAKE_CLAUDE = textwrap.dedent('''
 
 class SelectionTests(unittest.TestCase):
     def test_api_key_selects_sdk(self):
-        with mock.patch.dict(os.environ, {"ANTHROPIC_API_KEY": "test-placeholder"}):
+        with mock.patch.dict(os.environ, {"ANTHROPIC_API_KEY": "test-placeholder"}), \
+                mock.patch("anthropic.Anthropic") as client:
             self.assertIsInstance(select_provider(load_config(), local={}), SDKProvider)
+        client.assert_called_once()
 
     def test_no_key_selects_cli(self):
         env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}

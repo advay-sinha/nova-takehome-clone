@@ -14,23 +14,45 @@ The grader's three commands are unchanged (`ingest`, `report --as-of --mode`, `f
 - Without a key it uses a logged-in Claude Code CLI on PATH, which is how I ran it locally. The optional, gitignored
   `harness/.local-llm.json` (template: `harness/local-llm.example.json`) lets that CLI find its login inside the
   grader's stripped environment.
-- With neither, it stops with an error rather than returning an empty audit.
+- With neither, the local document reader extracts explicit clauses, labelled invoice rows, spreadsheet headers
+  and scoped email statements into the same typed facts. It reads the actual mailbox, including local OCR, without
+  API calls, a model response cache or saved answers. Contract-specific identifiers, codes, rates and contacts come
+  from the documents. A recognised invoice with no parseable billed rows fails with an actionable error.
+  Authentication or rate-limit failures from an already configured model retain their existing error/retry handling.
+
+`make test` runs the offline synthetic suite using the same virtualenv as the harness. `make test-mutations`
+verifies eight deliberately broken controls in temporary copies; every unmodified control must pass first, and
+crashes, import errors and skipped tests do not count as a detected regression. Neither command calls a model.
+
+The unchanged supplied grading workflow runs `make setup`, `make grade` and `make validate`. With an empty
+`ANTHROPIC_API_KEY` and no Claude CLI, grading now uses the local reader. Providing a key still selects the SDK.
+Run the offline checks separately with the commands above.
 
 Each step keeps to a 540 s budget. Work that does not fit, or that hits a usage limit, stays pending and is finished
 by the next step. Progress lines (`extract k/N done ...`) go to stderr, the report to stdout.
 
 ## What works
 
-- **Results.** Practice grade (`report_card.txt`): 99.8/100 in both modes, every hard gate clear, answer-sheet check
+- **Committed baseline results.** Practice grade (`report_card.txt`): 99.8/100 in both modes, every hard gate clear, answer-sheet check
   9/9. My own eval set: 20/20, 18 of them mine (`evals/results.json`). Exam answer sheet (`answer_sheet.json`, as of
   2031-02-28): total savings $8,165.33, with the report's schema and every citation valid.
+  These committed artifacts predate the action-guard and local-reader changes and have not been overwritten.
+- **Fresh credential-free validation.** From empty state, with no model settings or response cache: `make grade`
+  scores 99.831/100 in both modes, all five hard gates clear and all nine answer-sheet rows matching. The eval runner
+  passes 20/20. A fresh exam run reproduces the committed totals, class ids and amounts, deadlines, conflict and
+  missing-document entries, including $8,165.33 total savings. This validates the local path on these mailboxes;
+  it does not measure a fresh live model extraction or establish performance on unseen layouts.
 - **Reading.** Every email, PDF and Excel sheet is read with the grader's own text layer, so quotes resolve. Receipt
   times are in UTC; a resent file stays a separate occurrence; scans are read by local OCR. The practice and exam
   mailboxes (163 and 86 documents) have no unreadable document.
-- **Extraction.** One structured Claude call per email bundle, long PDFs in parallel 4-page chunks, large spreadsheets
+- **Extraction.** With model access: one structured Claude call per email bundle, long PDFs in parallel 4-page chunks, large spreadsheets
   mapped by header and parsed row by row in Python. Every fact must quote its page, and its numbers and dates must be
   on it. Invoice arithmetic is checked, and a misread document is re-read once. The live practice and exam
-  extractions had 0 rejected facts.
+  extractions had 0 rejected facts. Without model access, the local reader reads agreements before billing units,
+  learns charge aliases, maps spreadsheet columns by header and preserves clause, page and quote provenance. It uses
+  the same schema, evidence, arithmetic, authority, financial and action checks. It handles amount-first and
+  amount-last invoice layouts, missing OCR spaces, scoped waivers and dated rate notices; bank footers cannot become
+  fuel-charge rows. It can resume a partially completed model extraction without dropping later agreement pages.
 - **Detection.** Every class, in both modes:
   - overcharge: rate bands and periods, minimums, fuel on the correct base, Annex accessorials and the contract's own
     conditions, amendments, rate-notice authority, unranked conflicts, missing revised annexes, INR converted once;
@@ -42,13 +64,20 @@ by the next step. Progress lines (`extract k/N done ...`) go to stderr, the repo
     a margin, so that is tested on invented data only);
   - expiry.
 
-  Actions apply the $5,000 sum per key and the five unattended checks.
+  Actions apply the $5,000 sum per key and the five unattended checks. Open conflicts are scoped to contract,
+  lane, charge and rate period across every affected shipment; freight conflicts also cover dependent fuel.
+  Rejected citations prevent unattended execution and stay out of the published evidence. An item without the
+  required number of resolvable citations is omitted with a diagnostic on stderr.
 - **Feedback.** All six decisions apply from `decided_at`, only inside their scope, with `learned_at`. The report
   history gives stable ids, `supersedes` and `retro`.
 - **Traces.** Every reported amount replays from its internal trace (`harness/nova/trace.py`, traces under
   `--state-dir/traces/`), with an allowlisted set of formulas.
-- **Tests.** 156 offline tests on synthetic data, no network. They include the six counterfactual families
-  (`tests/offline/test_metamorphic.py`), each checked to fail when the rule it protects is broken.
+- **Tests.** 188 offline tests on synthetic data, no network, including the six counterfactual families
+  (`tests/offline/test_metamorphic.py`), conflict isolation, citation loss and complete numeric-value matching.
+  Local-reader regressions cover altered layouts and wording, currency, OCR, bank footers, quoted and conditional
+  waivers, draft authority, prompt injection, ambiguous dates, unsupported billing and partial-run recovery.
+  Eight selected control regressions are also checked by `make test-mutations`. CLI crash fixtures and generated
+  spreadsheet ZIP metadata are portable across Windows and Linux.
 
 ## What doesn't
 
@@ -61,9 +90,14 @@ by the next step. Progress lines (`extract k/N done ...`) go to stderr, the repo
   measured because no item was wrong, so it is not calibrated.
 - **Runs and cost.** One practice batch took 399 s of the 600 s step limit. A hidden batch with many long contracts
   could need two steps; unfinished work is saved and completed by the next one.
-- **Cached reruns.** My final practice card, eval run and exam sheet reused model answers my harness had already
+- **Local-reader coverage.** The fallback recognises explicit document structures, not arbitrary natural language.
+  Unrecognised clauses can remain unextracted; a new invoice layout may need model access or an additional tested
+  parser. Partially parsed invoices still go through arithmetic checks and expose unresolved extraction issues.
+  No trained model, embeddings or additional external service was introduced.
+- **Cached model reruns.** The committed practice card, eval run and exam sheet reused model answers my harness had already
   extracted (a local response cache, never present on the grader's machine). They show the rules are right on those
-  extractions, not that every fresh extraction comes out the same.
+  extractions, not that every fresh model extraction comes out the same. The fresh credential-free checks above
+  read source documents again and use no model-response cache.
 
 ## The eval case that caught a bug
 

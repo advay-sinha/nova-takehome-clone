@@ -6,12 +6,18 @@ Final state, 2026-10-18. Practice grade 99.8/100, my eval set 20/20, exam sheet 
 
 Every email and attachment is an occurrence keyed by the path the grader cites (`batch_01/0003.eml#INV.pdf`), with
 its UTC receipt time from the Date header, sender and page text from the grader's own reader (OCR for scans). A
-resent identical file stays a separate occurrence. Claude transcribes each document into typed facts: contracts and
+resent identical file stays a separate occurrence. The selected document reader transcribes each document into typed facts: contracts and
 terms, rate/fuel/FX/accessorial rows, charge-code aliases, Schedule 1 people, invoices and lines, credit notes,
 ledger and tracking rows, waivers, extensions, rate notices, status events. Every fact carries `{doc, page, quote}`.
-Python accepts a fact only if the quote is on that page and its numbers and dates are too (date order learned per
-sender); invoice arithmetic is checked, and a misread gets one targeted re-read. Money is a printed string parsed
+Python verifies each quote on its page and checks numbers and dates in the same document (date order learned per
+sender). Numeric checks compare whole values, not substrings of larger numbers or IDs; invoice arithmetic is
+checked, and a misread gets one targeted re-read. Money is a printed string parsed
 to Decimal. All state is SQLite under `--state-dir`.
+
+Selection: API key → SDK; otherwise Claude CLI; neither available → local structural reader. The local reader uses
+the same schema and validators without model calls or response caches. It preserves quotation, waiver conditions
+and effective dates, and resumes incomplete agreements. Unsupported billing fails explicitly; unfamiliar clauses
+remain a coverage limitation. Configured model failures retain normal error handling. Details are in SOLUTION.md.
 
 ## Conflicts
 
@@ -34,8 +40,10 @@ so it is not calibrated. No similarity score feeds it.
 Supervised mode never executes outbound actions: disputes, claims and document requests are drafts, and
 anything of $5,000 or more summed per invoice or cashback key goes to human_review. In autonomous mode an action
 executes only when all five unattended checks pass: complete evidence received by as_of with a tracked
-pickup date, no conflict on that contract and lane, under $5,000, reversible, and every term from level 1–2 with a
-Schedule 1 recipient. Conflicts always escalate. Mailbox text is data; instructions in it change nothing.
+pickup date, no conflict on that contract, lane, charge and rate period, under $5,000, reversible, and every term
+from level 1–2 with a Schedule 1 recipient. Every affected shipment is checked; freight conflicts include dependent
+fuel. Rejected citations block execution and are never reinserted into evidence. Items lacking enough resolvable
+citations are omitted with a diagnostic. Conflicts always escalate. Mailbox text is data; instructions in it change nothing.
 
 ## Feedback
 
@@ -55,6 +63,8 @@ later reports but not earlier ones. A key whose verdict or amount changes gets a
 nothing is carried over.
 
 ## Cost
+
+Fresh local reading: 99.831/100 practice, 20/20 evals, matching exam sheet; no model cost. Model-backed baseline:
 
 Measured on the whole practice mailbox (163 documents, 82 calls) through Claude Code with `claude-opus-5-5`: 262k
 output, 221k cache-write and 735k cache-read tokens. At API prices ($4/$20 per million input/output, $0.20 cache

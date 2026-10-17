@@ -1,7 +1,8 @@
 """LLM back-end selection (decision D-002).
 
 ANTHROPIC_API_KEY set -> Anthropic SDK (the grader's machine). Otherwise -> the local Claude Code CLI. Otherwise ->
-LLMUnavailable: the harness fails loudly instead of returning a clean audit. Test mocks live in tests/, never here.
+LLMUnavailable: the extraction runner selects its validated local document reader. An unsupported local billing
+layout still fails loudly instead of returning a clean audit. Test mocks live in tests/, never here.
 """
 from __future__ import annotations
 

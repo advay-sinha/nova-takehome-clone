@@ -51,6 +51,18 @@ class ValidateTests(unittest.TestCase):
         self.assertEqual(status, "unverified")
         self.assertIn("amount", issues[0])
 
+    def test_number_must_be_a_whole_value(self):
+        # 118 is a substring of 1,118; 20 is a substring of both 4.20 and 2041.
+        # Neither is a separately printed value in this freight row/document.
+        for field, value in (("quantity", "118"), ("rate", "20"), ("amount", "695.60")):
+            with self.subTest(field=field):
+                status, issues = check_item(self.index, "invoice_lines", LINE | {field: value})
+                self.assertEqual(status, "unverified")
+                self.assertTrue(any(field in issue for issue in issues))
+
+    def test_equivalent_decimal_formatting_is_verified(self):
+        self.assertEqual(check_item(self.index, "invoice_lines", LINE | {"rate": "4.2000"}), ("ok", []))
+
     def test_wrong_date_is_unverified(self):
         status, issues = check_item(self.index, "invoice_lines", LINE | {"pickup_date": "2041-02-03"})
         self.assertEqual(status, "unverified")

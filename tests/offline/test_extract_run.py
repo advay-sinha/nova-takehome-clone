@@ -150,13 +150,35 @@ class ExtractRunTests(unittest.TestCase):
         run_pending(self.store, lambda: self.mock, CFG, 300)              # the limit resets: everything completes
         self.assertEqual(self.store.units(("pending", "failed")), [])
 
-    def test_no_back_end_fails_loudly_and_keeps_work(self):
+    def test_no_back_end_reads_locally_without_populating_model_cache(self):
         def unavailable():
             raise LLMUnavailable("no back end")
-        with self.assertRaises(LLMUnavailable):
-            run_pending(self.store, unavailable, CFG, 300)
-        self.assertEqual(self.unit("bundle:batch_01/0002.eml")["status"], "pending")
+        stats = run_pending(self.store, unavailable, CFG, 300)
+        self.assertGreater(stats["facts"], 0)
+        self.assertEqual(self.unit("bundle:batch_01/0002.eml")["status"], "done")
+        self.assertEqual(self.unit("bundle:batch_01/0002.eml")["backend"], "local")
+        self.assertEqual(self.store.db.execute("SELECT COUNT(*) FROM llm_cache").fetchone()[0], 0)
+        line = self.store.facts("invoice_lines")[0]
+        self.assertEqual(json.loads(line["data_json"])["amount"], "495.60")
+        self.assertEqual(line["origin"], "local")
         self.assertEqual(self.store.db.execute("SELECT COUNT(*) FROM documents").fetchone()[0], 12)  # 6 emails + 6
+
+    def test_local_resume_reads_later_pages_after_a_partial_model_run(self):
+        def unavailable():
+            raise LLMUnavailable("no back end")
+        first = "long:batch_01/0005.eml#MSA-PW-OB-EXP-08.pdf@1-4"
+        later = "long:batch_01/0005.eml#MSA-PW-OB-EXP-08.pdf@5-5"
+        doc = "batch_01/0005.eml#MSA-PW-OB-EXP-08.pdf"
+        with self.store.db:
+            self.store.db.execute("UPDATE extraction_units SET status='done', backend='sdk' WHERE unit=?", (first,))
+            self.store.db.execute("UPDATE pages SET text=? WHERE doc=? AND page=1",
+                                  ("Master Services Agreement PW-OB-EXP-08", doc))
+            self.store.db.execute("UPDATE pages SET text=? WHERE doc=? AND page=5",
+                                  ("Annex A: Express rates (USD)\nKLX1-PQR3 100-299.5 kg 4.20", doc))
+        run_pending(self.store, unavailable, CFG, 300)
+        rate = next(r for r in self.store.facts("rate_rows") if r["doc"] == doc)
+        self.assertEqual((rate["page"], json.loads(rate["data_json"])["rate"]), (5, "4.20"))
+        self.assertEqual(self.unit(later)["backend"], "local")
 
     def test_bad_answers_fail_with_bounded_retries(self):
         bad = MockProvider(lambda req: {"unexpected": True})
