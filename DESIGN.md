@@ -14,17 +14,10 @@ sender). Numeric checks compare whole values, not substrings of larger numbers o
 checked, and a misread gets one targeted re-read. Money is a printed string parsed
 to Decimal. All state is SQLite under `--state-dir`.
 
-With an API key, extraction uses the Anthropic SDK; otherwise it selects the Claude CLI when available. If neither
-backend can be constructed, a local reader uses explicit clauses, rate tables, invoice labels, spreadsheet headers
-and email statements. It shares the model path's fact schema and validators, and records its backend as `local`.
-Agreement terms and charge aliases are read before billing units. A long agreement is read in full once, including
-when resuming after a model completed only earlier chunks. The reader preserves quoted status and waiver conditions;
-the existing resolver still decides authority. Bank-account footers are excluded from charge rows.
-
-This path has no model calls or response-cache reads. It fails on a recognised invoice without parseable rows;
-arithmetic mismatches use the existing recheck and unresolved-extraction signals. It is a bounded structural parser:
-unfamiliar clauses and layouts remain a coverage limitation. Errors from an already configured live provider are
-not converted into local successes. The supplied workflow is unchanged; an empty key now exercises this reader.
+Selection: API key → SDK; otherwise Claude CLI; neither available → local structural reader. The local reader uses
+the same schema and validators without model calls or response caches. It preserves quotation, waiver conditions
+and effective dates, and resumes incomplete agreements. Unsupported billing fails explicitly; unfamiliar clauses
+remain a coverage limitation. Configured model failures retain normal error handling. Details are in SOLUTION.md.
 
 ## Conflicts
 
@@ -71,9 +64,7 @@ nothing is carried over.
 
 ## Cost
 
-The credential-free reader incurs no model API cost. Fresh runs reproduce the practice score (99.831/100,
-all hard gates clear), 20/20 eval cases and the exam sheet's amounts, ids, deadlines and abstentions. These runs start
-with empty state and no shared response cache. The model-backed measurements below are from the committed baseline.
+Fresh local reading: 99.831/100 practice, 20/20 evals, matching exam sheet; no model cost. Model-backed baseline:
 
 Measured on the whole practice mailbox (163 documents, 82 calls) through Claude Code with `claude-opus-5-5`: 262k
 output, 221k cache-write and 735k cache-read tokens. At API prices ($4/$20 per million input/output, $0.20 cache
