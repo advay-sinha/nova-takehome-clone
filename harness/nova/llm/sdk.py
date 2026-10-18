@@ -17,6 +17,8 @@ class SDKProvider:
     name = "sdk"
 
     def __init__(self, cfg: dict, client=None):
+        from . import forbid_in_local_only
+        forbid_in_local_only("Anthropic SDK provider")
         if client is None:
             import anthropic
             client = anthropic.Anthropic(timeout=float(cfg["request_timeout_s"]), max_retries=int(cfg["sdk_max_retries"]))

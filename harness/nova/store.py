@@ -147,10 +147,14 @@ class Store:
                         [*cols.values(), unit])
 
     def cache_get(self, key: str) -> dict | None:
-        row = self.db.execute("SELECT response_json FROM llm_cache WHERE key = ?", (key,)).fetchone()
+        from .llm import forbid_in_local_only
+        forbid_in_local_only("model-response cache read")
+        row =self.db.execute("SELECT response_json FROM llm_cache WHERE key = ?", (key,)).fetchone()
         return json.loads(row["response_json"]) if row else None
 
     def cache_put(self, key: str, purpose: str, data: dict, backend: str, model: str, usage: dict, now: str) -> None:
+        from .llm import forbid_in_local_only
+        forbid_in_local_only("model-response cache write")
         self.db.execute("INSERT OR REPLACE INTO llm_cache (key, purpose, response_json, backend, model, usage_json, "
                         "created_at) VALUES (?,?,?,?,?,?,?)",
                         (key, purpose, json.dumps(data, sort_keys=True), backend, model, json.dumps(usage), now))

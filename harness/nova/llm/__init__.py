@@ -3,6 +3,9 @@
 ANTHROPIC_API_KEY set -> Anthropic SDK (the grader's machine). Otherwise -> the local Claude Code CLI. Otherwise ->
 LLMUnavailable: the extraction runner selects its validated local document reader. An unsupported local billing
 layout still fails loudly instead of returning a clean audit. Test mocks live in tests/, never here.
+
+NOVA_LOCAL_READER_ONLY=1 skips all of that: the runner goes straight to the local document reader, and constructing
+a provider or opening the shared response cache raises instead of silently calling a model.
 """
 from __future__ import annotations
 
@@ -17,8 +20,23 @@ HERE = Path(__file__).resolve().parent
 CONFIG_FILE = HERE.parent / "llm_config.json"
 LOCAL_FILE = HERE.parents[1] / ".local-llm.json"     # harness/.local-llm.json, gitignored
 
+LOCAL_ONLY_ENV = "NOVA_LOCAL_READER_ONLY"
+
 __all__ = ["BudgetExhausted", "CallBudget", "LLMError", "LLMLimited", "LLMRequest", "LLMResult", "LLMUnavailable", "load_config",
-           "load_local", "select_provider", "iter_completed", "run_many"]
+           "load_local", "select_provider", "iter_completed", "run_many", "local_reader_only", "LocalOnlyViolation"]
+
+
+class LocalOnlyViolation(RuntimeError):
+    """A model provider or response cache was requested while NOVA_LOCAL_READER_ONLY=1."""
+
+
+def local_reader_only(environ=None) -> bool:
+    return (os.environ if environ is None else environ).get(LOCAL_ONLY_ENV) == "1"
+
+
+def forbid_in_local_only(what: str) -> None:
+    if local_reader_only():
+        raise LocalOnlyViolation(f"{what} requested while {LOCAL_ONLY_ENV}=1")
 
 
 def load_config() -> dict:
@@ -39,6 +57,7 @@ def load_local(path: Path | None = None) -> dict:
 
 
 def select_provider(cfg: dict | None = None, local: dict | None = None, environ=None):
+    forbid_in_local_only("model provider")
     cfg = cfg or load_config()
     environ = os.environ if environ is None else environ
     if environ.get("ANTHROPIC_API_KEY"):

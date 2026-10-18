@@ -1,7 +1,8 @@
 """Credential-free extraction, using printed structure and the normal fact/evidence validators.
 
-This path has no model calls, response cache or knowledge of evaluation keys. It is selected only when a model
-provider cannot be constructed. Model authentication/rate-limit errors during a configured live run remain errors.
+This path has no model calls, response cache or knowledge of evaluation keys. It is selected when a model provider
+cannot be constructed, or explicitly with NOVA_LOCAL_READER_ONLY=1. Model authentication/rate-limit errors during a
+configured live run remain errors.
 """
 from __future__ import annotations
 
@@ -44,7 +45,7 @@ def extract(docs, labels=(), contract_ids=(), hints=None):
     return out
 
 
-def run_local(store, seconds):
+def run_local(store, seconds, reason="no model backend available"):
     from .run import MAX_ATTEMPTS, _apply_recheck, _check_billing, _clone, _doc_payload, _now, _order_hints, log
     from ..llm import LLMUnavailable
 
@@ -52,7 +53,7 @@ def run_local(store, seconds):
     stats = Counter()
     whole_documents = {d for u in store.units(("done",)) if u["kind"] == "long" and u["backend"] == "local"
                        for d in json.loads(u["docs_json"])}
-    log("extract: no model backend available; using local document reader (no API calls or response cache)")
+    log(f"extract: {reason}; using local document reader (no API calls or response cache)")
     for _ in range(2):
         units = [u for u in store.units(("pending", "failed")) if u["attempts"] < MAX_ATTEMPTS and u["kind"] != "clone"]
         # Read agreement tables first so invoice labels come from held contracts.
