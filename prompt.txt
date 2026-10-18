@@ -1,0 +1,215 @@
+PROJECT EXECUTION PROMPT — INDEPENDENT UNSEEN-WORLD EVALUATION
+Repository: advay-sinha/nova-takehome-clone
+Goal: improve demonstrated generalization and reviewer confidence without adding another model, embeddings, or RAG.
+
+IMPORTANT: Execute the work described below in the repository. Do not merely return a plan. Inspect the current implementation first, make small tested changes, run the required validation, and report exactly what passed and failed. Never claim a result that was not actually produced.
+
+============================================================
+1. PRIMARY OBJECTIVE
+============================================================
+
+The most valuable next improvement is an independently authored, genuinely new-world evaluation suite. The current practice and exam scores are strong, but most of the evidence still comes from a small number of mailboxes and authored cases. Add new synthetic worlds with different carriers, customers, identifiers, contract language, pricing structures, email wording, spreadsheet layouts, and invoice formats. Use them to test whether the existing local document reader and deterministic rules generalize beyond familiar templates.
+
+Do NOT add an ML model, embeddings, vector database, RAG pipeline, or another external service. The current bottleneck to address is evidence of generalization, not model capability.
+
+The local document reader MUST be used for all grade, exam-sheet, existing-eval, new-eval, regression, and mutation testing. Do NOT use the Claude CLI, Anthropic SDK/API, an API key, a saved model response, or another hosted model for any test or expected-answer generation.
+
+============================================================
+2. NON-NEGOTIABLE SAFETY AND SCOPE RULES
+============================================================
+
+Preserve these files and directories byte-for-byte:
+- .github/workflows/grade.yml (the original supplied workflow; do not modify it)
+- CLAUDE.md
+- .claude/
+- ai_log/
+- ai_logs/ (if present)
+- AI_USE.md
+
+Also do not modify the supplied grader implementation, its scoring/matching rules, the original brief/glossary/submission instructions, or the original source answer keys in data/scenarios/answers/. Do not alter existing expected answers merely to make tests pass. Do not remove existing tests or weaken assertions. Do not rewrite official report-card/exam artifacts unless their replacement has been independently checked and the change is necessary and justified.
+
+Before editing:
+1. Inspect git status, current branch, recent commits, and the existing local-reader implementation.
+2. Record hashes for every protected path and verify they remain identical at the end.
+3. Read README.md, GLOSSARY.md, SUBMISSION.md, SOLUTION.md, DESIGN.md, evals/README.md, the current evaluation runner, local reader, rules, evidence validator, and offline tests.
+4. Run the current local-only baseline into temporary output paths. Keep a record of the baseline, including any failures.
+
+Do not introduce secrets or network dependencies. Do not add competitor repository names or URLs to source code, test fixtures, or commit messages. Do not copy another submission's code. The pull-request description may transparently list public comparison links and summarize the generic engineering ideas considered.
+
+Do not change grade.yml to work around missing credentials. The original grading workflow must remain the workflow being tested.
+
+============================================================
+3. GUARANTEE LOCAL-READER-ONLY EXECUTION
+============================================================
+
+The current backend selection can choose the Anthropic SDK when a key exists, or the Claude CLI otherwise, and only falls back to the local reader when a provider cannot be constructed. Add an explicit, testable local-only switch, preferably NOVA_LOCAL_READER_ONLY=1, unless an equivalent reliable switch already exists.
+
+Required behavior:
+- When NOVA_LOCAL_READER_ONLY=1, route extraction directly to the existing validated local reader before constructing a provider or opening a shared model-response cache.
+- The local-only path must never instantiate SDKProvider or CLIProvider, launch a Claude process, make network calls, or read model-response cache entries.
+- Keep normal model-backed behavior unchanged when the flag is absent. Do not silently convert an authentication/rate-limit error from an explicitly configured live provider into a local-reader result.
+- Every subprocess started by the eval runner must inherit the local-only flag.
+- In local-only test commands, remove ANTHROPIC_API_KEY, ANTHROPIC_BASE_URL, and NOVA_LOCAL_LLM from the child environment. Do not require these variables to be configured.
+- Add a regression test that patches provider construction/CLI launch to fail immediately if called, then proves that local-only extraction and evaluation still work. A log message alone is not proof.
+- Each evaluation case must start with a fresh temporary state directory. Do not reuse previous extracted facts, model responses, database state, or cached answers.
+
+Use this explicit local-only mode for all checks below, even if a developer machine happens to have Claude Code logged in. Do not rely on “no CLI installed” as the way to force the local reader.
+
+============================================================
+4. BUILD INDEPENDENT SYNTHETIC WORLDS
+============================================================
+
+Add a self-contained suite under evals/unseen_worlds/ (or another clearly named evals subdirectory). Keep existing evaluation cases and expected answers intact. The new suite must be separate and independently identifiable in its own results report.
+
+Create at least four distinct fictional customer/carrier worlds and at least 36 new cases:
+- 24 development cases (at least six per world).
+- 12 final holdout cases (at least three per world), generated after the reader/parser behavior is frozen.
+- Include at least 10 clean/no-finding controls across the suite.
+- Cover both supervised and autonomous modes, with fresh state per case.
+
+Worlds must differ in more than names. Vary clause wording, contract structure, charge codes and aliases, party/authority schedules, rate bands, billing units, currency presentation, invoice layout, date formats, spreadsheet column names/order, attachment types, email style, and document arrival order. Use invented data only. Do not copy or lightly rename the existing practice, exam, or current custom mailboxes.
+
+At least these behavior families must be covered; distribute them across the worlds and test both positive and negative lookalikes:
+A. Rate calculation: lower/upper band boundaries, exact effective-date boundaries, minimum charges, per-shipment/per-kg fees, fuel surcharge base, accessorial fees, and rate changes.
+B. Contract precedence: backdated amendment, amendment arriving after an invoice, authorised versus unauthorised rate notice, conflicting trusted sources, and missing annex that must produce cannot_determine rather than a guess.
+C. Duplicates: resent invoice across batches, the same shipment on two distinct invoices, paid invoice requested again, credit-note netting, and a clean multi-shipment invoice that must not self-collide.
+D. Waivers: authorised sender, unauthorised sender, single-shipment scope, monthly scope, quoted-only/forwarded waiver, one-off waiver that must not become permanent, and unrelated clean shipments.
+E. Late fees: grace period, documented extension, fee charged inside an extension, compounding rule, date ambiguity requiring abstention, and a fee-risk deadline at the boundary.
+F. Cashback/credits: quarterly rebate, annual improvement credit, and handling-margin step-down with independently worked arithmetic.
+G. Expiry: end date, auto-renewal, and notice deadline boundaries.
+H. Extraction robustness: renamed spreadsheet headers, reordered columns/rows, amount-first and amount-last invoice layouts, line-item versus summary totals, multi-page contract clauses, OCR-like whitespace/character noise, explicit currency labels, and alternative date wording.
+I. Safety and evidence: prompt injection embedded in email/document text, a conflict requiring citations from both disagreeing sources, weak/absent evidence, and a case where the correct result is human review or cannot_determine.
+J. Cross-batch state and feedback: feedback effective date, feedback scope, supersession, retroactivity if supported by the current contract, and proof that a one-off decision does not leak to other keys.
+
+Do not invent unsupported business semantics. Follow GLOSSARY.md and the supplied brief. Where the brief is ambiguous, prefer a conservative, documented abstention and record the assumption in the case rationale.
+
+============================================================
+5. INDEPENDENT EXPECTED ANSWERS — NO TEST-ORACLE LEAKAGE
+============================================================
+
+Expected answers must be calculated independently from the code under test:
+- Use hand-worked expected outcomes and Python Decimal for monetary arithmetic.
+- Do not import or call harness rules, local-reader functions, report functions, grader internals, or the implementation under test to produce expected answers.
+- Do not infer the expected answer from a run of the system. Never generate a golden answer by copying actual output.
+- Each case must include a short rationale that identifies the decisive source, effective date, arithmetic, authority, and expected verdict.
+- For conflicts, list both trusted conflicting documents and the precise evidence expected from each.
+- For clean controls, state why the invoice is allowed and which tempting false positive must not be emitted.
+- Keep the data generator deterministic with a fixed seed. If generation code computes expected values, keep that oracle code separate from the reader/rules and independently unit-test its arithmetic.
+- Check all identifiers, amounts, dates, currencies, and source quotes in the fixture before accepting a case.
+- Ensure case generation never reads data/scenarios/answers/ or any hidden evaluator material.
+
+The holdout split is intended to measure generalization, not to invite case-by-case hardcoding. Freeze the parser and rules after development cases pass, then run holdout once. If a holdout failure requires a generalizable fix, add a regression that explains the underlying defect, apply the fix at the abstraction level, and create a fresh additional holdout case/seed for the next final check. Document failures honestly; never silently remove or relabel a failing case.
+
+============================================================
+6. EVALUATION RUNNER AND REPORTING
+============================================================
+
+Reuse the existing harness CLI and state semantics. Do not replace or modify the supplied grader. Prefer a separate runner and results files under evals/unseen_worlds/ so the original evaluation flow remains backwards compatible.
+
+The runner must:
+- Set NOVA_LOCAL_READER_ONLY=1 and clear model-related environment variables for every child process.
+- Use fresh temporary state for every case and process batches in chronological order.
+- Exercise both supervised and autonomous modes where appropriate.
+- Fail if any provider/CLI/cache path is touched.
+- Emit machine-readable JSON plus a concise text summary.
+- Preserve individual case results and show the exact expected-versus-actual difference on failures.
+- Report results by world, split, class, and mode.
+- Score the complete finding set where feasible: true positives, false positives, false negatives, precision, recall, F1 by class, amount accuracy, total recovered amount, wrongly disputed amount, clean-control rate, conflict/abstention correctness, citation validity, and action-gate safety.
+- Do not report precision/recall/F1 from a one-key pass/fail test unless the runner has enough complete ground truth to calculate those metrics correctly. Label metrics that cannot be computed as unavailable rather than guessing.
+- Report development and holdout results separately. Do not combine them into one flattering number without also showing both.
+- Include runtime per world/case and distinguish parser coverage failures from financial-rule failures.
+
+A new summary script may call the existing CLI and parse its reports, but it must not use the implementation's rule functions as the expected-answer oracle. Ensure output is reproducible and clearly names the local-reader-only mode.
+
+Add a documented command such as make eval-unseen or an equivalent cross-platform Python entry point. Existing make eval must also be explicitly run with local-reader-only mode for this task.
+
+============================================================
+7. METAMORPHIC AND PROPERTY-BASED TESTS
+============================================================
+
+Extend the current metamorphic suite with behavior-preserving transformations that should not change the result:
+- Reorder invoice rows without changing line values.
+- Reorder irrelevant email text or add a harmless footer.
+- Rename spreadsheet columns using supported aliases and reorder the columns.
+- Change number formatting without changing numeric value, with unambiguous currency/date labels.
+- Split a contract clause across PDF pages while preserving its text and authority.
+- Add an unrelated clean invoice or document; existing findings must remain stable.
+- Change a one-off waiver to name one different shipment; only the intended shipment may change.
+- Reorder batches only where the stated as-of/effective-date semantics mean order should not matter; do not assume all reordering is semantics-preserving.
+- Add a misleading prompt-injection instruction; business facts and financial decisions must remain unchanged.
+
+For each transformation, state the invariant and the specific defect it is designed to expose. Avoid tautological tests that only compare the reader to itself. Use independently worked source facts and expected relations.
+
+============================================================
+8. ADD ONLY HIGH-VALUE COMPLEMENTARY IMPROVEMENTS
+============================================================
+
+Inspect existing code and tests before implementing any item. Do not duplicate functionality already covered well. Prioritize:
+1. Handling-margin step-down cashback: test it in a new world with independent arithmetic and boundary cases, even if no supplied mailbox uses it.
+2. Cross-invoice duplicate detection: verify same-shipment duplicates across batches, but avoid false self-collisions among multiple AWBs within one invoice.
+3. Invoice arithmetic consistency: verify line totals, printed totals, credit notes, currency conversions, and amount-first/amount-last layouts. If totals disagree, preserve the existing safe error/abstention behavior rather than fabricating a clean result.
+4. Evidence grounding: every cited quotation must exist in the actual source/page; conflicts must cite both sources; invalid citations must never re-enter the final report or authorize an outbound action.
+5. Authority and scope: waiver and rate-notice authority, charge/lane/date scope, dependent fuel charges, and one-off feedback must remain scoped.
+6. Mutation testing: retain all existing mutations. Add a small number of meaningful mutations only when each has a paired regression that passes on the unmutated code and fails on the mutation. Good candidates include rate-date boundary, currency double-conversion, waiver-scope leakage, duplicate self-collision, missing citation, margin step-down arithmetic, and bypassing a conflict gate. A crash, import error, skipped test, or missing test is never a successful mutation kill.
+7. Confidence: report calibration diagnostics only if there are enough independent correct and incorrect decisions. Do not claim a calibrated model from a heuristic score or an all-correct sample. Do not change confidence thresholds without measured evidence.
+
+Do not add another model or external service. Do not add RAG/embeddings simply for novelty. Every code change must be justified by a failing independent case or a clear safety invariant.
+
+============================================================
+9. REQUIRED LOCAL-ONLY VALIDATION
+============================================================
+
+Run every command below with the explicit local-only flag enabled, with API/CLI configuration absent, and with fresh state/output paths where possible:
+- Practice grade using the original grader and original grade.yml.
+- Exam mailbox/answer-sheet replay.
+- Existing custom eval suite.
+- New development suite.
+- New holdout suite.
+- Offline regression tests.
+- Mutation tests.
+- Submission validation.
+- Git diff checks for protected files and original evaluator assets.
+
+Example POSIX invocation:
+  env -u ANTHROPIC_API_KEY -u ANTHROPIC_BASE_URL -u NOVA_LOCAL_LLM NOVA_LOCAL_READER_ONLY=1 make test
+Use the same environment for grade, sheet, eval, eval-unseen, test-mutations, and validate. If Make targets overwrite canonical result artifacts, first run their underlying Python commands with temporary output paths; only refresh committed artifacts after independently comparing them and verifying that the change is justified. Add equivalent PowerShell instructions to the documentation if needed.
+
+The local-only test must work even when Claude Code is installed and logged in. Demonstrate this by a test that fails if a CLI or SDK provider is constructed. A run that quietly uses a model cache does not count.
+
+Acceptance criteria:
+- Existing tests continue to pass.
+- All new development cases pass, or every failure is explicitly documented with no false success claim.
+- Holdout results are separately reported and are not used for per-case hardcoding.
+- The original practice hard gates remain clear and the original answer-sheet check remains exact.
+- No regression in existing evals, amount arithmetic, evidence, conflict, feedback, or action safety.
+- The local-only mode proves zero SDK/CLI/cache/network use.
+- The original .github/workflows/grade.yml and all protected files have identical hashes.
+- make validate passes; update SOLUTION.md/DESIGN.md only if relevant, concise, truthful, and within their word limits. Never claim a result until it was run.
+- No hidden answer keys, evaluator code, or original answer sheets are changed.
+- Final PR diff contains only relevant implementation, tests, new independent fixtures/results/docs, and necessary Makefile changes.
+
+============================================================
+10. WORKFLOW AND FINAL RESPONSE
+============================================================
+
+Work in a new branch. Make small commits with descriptive, implementation-focused messages that do not mention other repositories. Do not merge automatically.
+
+The pull-request description should summarize:
+- the local-only reader guarantee;
+- how the new worlds differ from the supplied examples;
+- the independent expected-answer methodology;
+- development and holdout results separately;
+- the exact commands run and their actual outcomes;
+- known gaps and any failed cases;
+- public comparison references, if useful, only in the PR description, not in source code or commit messages.
+
+At the end, report:
+1. Files changed and why.
+2. Number of worlds/cases and coverage by class/mode.
+3. Fresh local-reader-only practice grade, exam-sheet result, existing eval score, development score, and holdout score (only if actually run).
+4. Offline test and mutation results.
+5. Confirmation that no API key, SDK provider, Claude CLI, response cache, or network was used during evaluation.
+6. Confirmation that grade.yml and all protected files are unchanged.
+7. PR link and any remaining limitations.
+
+Never inflate scores, hide failures, alter expected results to match the implementation, or claim that a case is independent if it was copied or lightly renamed from an existing fixture.
