@@ -1,0 +1,6 @@
+running harness/harness.py --local-reader-only on data\exam (report as of 2031-02-28, supervised)
+  ingest batch_01: exit 0
+  ingest batch_02: exit 0
+  report --as-of 2031-02-28 --mode supervised: exit 0
+wrote out\local_only\exam_report.json
+wrote out/local_only/answer_sheet.json: total_savings 8165.33 (overpayment 3847.70, cashback 4307.34, late fees avoided 10.29); 1 conflict(s), 1 cannot_determine
