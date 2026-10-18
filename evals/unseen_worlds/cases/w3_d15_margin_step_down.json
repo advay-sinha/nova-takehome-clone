@@ -1,0 +1,33 @@
+{
+ "id": "w3_d15_margin_step_down",
+ "world": "kittering",
+ "split": "dev",
+ "families": [
+  "F"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w3_d15_margin_step_down",
+ "feedback": {},
+ "why": "Carrier cost in Contract Year 1 reaches 43,000.00 on the May statement, exceeding 40,000.00; the June statement should carry a 4.0% margin, not 6.0%.",
+ "reports": [
+  {
+   "as_of": "2043-07-10",
+   "expect": [
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043",
+      "period": "2043-Q2",
+      "credit_type": "margin_step_down"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:claim_credit",
+      "autonomous": "execute:claim_credit"
+     },
+     "why": "June: 720.00 billed - 4.0% x 12,000.00 = 480.00: 240.00",
+     "amount_usd": "240.00"
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

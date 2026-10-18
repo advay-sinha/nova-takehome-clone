@@ -1,0 +1,51 @@
+{
+ "id": "w2_h05_backdated_inr_amendment",
+ "world": "sarvani",
+ "split": "holdout",
+ "families": [
+  "B",
+  "J"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w2_h05_backdated_inr_amendment",
+ "feedback": {},
+ "why": "Billed at Annex A Validity 1 (149.50), right until signed Amendment No. 3 arrives in batch_02 repricing MAA3-BOM1 100 kg + to 142.00 from 01.06.2043, before the 05.06.2043 pickup.",
+ "reports": [
+  {
+   "as_of": "2043-06-20",
+   "expect": [],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-1105",
+      "class": "overcharge"
+     },
+     "why": "before the amendment"
+    }
+   ],
+   "after": "batch_01"
+  },
+  {
+   "as_of": "2043-07-08",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-1105",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "INR 1102.50 / Annex F June 83.6110 = 13.19; retro, cites the amendment",
+     "amount_usd": "13.19",
+     "evidence_docs": [
+      "batch_02/0001.eml#Amendment-3-SAL-BDI-MSA-0743.pdf"
+     ],
+     "retro": true
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

@@ -13,6 +13,7 @@ from collections import Counter
 import jsonschema
 
 from .local_billing import read_credit, read_invoice, read_transport, table_rows
+from .tables import _sheet_rows
 from .local_common import Document
 from .local_contracts import read_contract
 from .local_mail import read_email
@@ -75,11 +76,13 @@ def run_local(store, seconds, reason="no model backend available"):
             hints = _order_hints(store, [d["doc"] for d in docs])
             tables, prose = [], []
             for d in docs:
-                tab = table_rows(Document(d, hints.get(d["doc"])), store.get_blob(store.document(d["doc"])["sha256"])) if d["kind"] == "xlsx" else None
+                blob = store.get_blob(store.document(d["doc"])["sha256"]) if d["kind"] == "xlsx" else None
+                tab = table_rows(Document(d, hints.get(d["doc"])), blob) if blob else None
                 if tab:
                     tables.extend(tab)
                 else:
-                    prose.append(d)
+                    # A statement of account keeps its cell positions: the text layer drops empty cells.
+                    prose.append(dict(d, grid=[_sheet_rows(blob, p) for p in range(1, len(d["pages"]) + 1)]) if blob else d)
             data = extract(prose, labels, contract_ids, hints)
             jsonschema.validate(data, FACTS_SCHEMA)
             rows = validate_facts(PageIndex(prose, hints), data, FACT_LISTS) + tables

@@ -1,0 +1,27 @@
+{
+ "id": "w3_d17_reordered_statement_columns_clean",
+ "world": "kittering",
+ "split": "dev",
+ "families": [
+  "H",
+  "A"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w3_d17_reordered_statement_columns_clean",
+ "feedback": {},
+ "why": "Every line matches Schedule A at its band edge (1000.0 kg at 4.00, 999.9 kg at 4.40, 299.9 kg at 5.10), fuel 20.0% on freight only and screening 0.20/kg; the statement's columns are renamed and in reverse order.",
+ "reports": [
+  {
+   "as_of": "2043-06-05",
+   "expect": [],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "KOA-ST-4605",
+      "class": "overcharge"
+     },
+     "why": "band edges billed correctly"
+    }
+   ]
+  }
+ ]
+}

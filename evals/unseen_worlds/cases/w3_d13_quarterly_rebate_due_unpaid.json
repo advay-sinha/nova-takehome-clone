@@ -1,0 +1,34 @@
+{
+ "id": "w3_d13_quarterly_rebate_due_unpaid",
+ "world": "kittering",
+ "split": "dev",
+ "families": [
+  "F",
+  "H"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w3_d13_quarterly_rebate_due_unpaid",
+ "feedback": {},
+ "why": "Q2 2043 Qualifying Spend crosses the USD 30,000.00 tier, so 2% applies to all of it; the credit was due by 2043-07-30 and no credit memo arrived.",
+ "reports": [
+  {
+   "as_of": "2043-08-12",
+   "expect": [
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043",
+      "period": "2043-Q2",
+      "credit_type": "rebate"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:claim_credit",
+      "autonomous": "execute:claim_credit"
+     },
+     "why": "QS 34468.00 x 2% = 689.36",
+     "amount_usd": "689.36"
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

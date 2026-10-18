@@ -1,0 +1,41 @@
+{
+ "id": "w2_d08_no_annex_f_row",
+ "world": "sarvani",
+ "split": "dev",
+ "families": [
+  "B",
+  "I"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w2_d08_no_annex_f_row",
+ "feedback": {},
+ "why": "Annex F lists months up to June 2043; the July invoice is overbilled in INR (60.0 kg is the 45 - 99.9 kg slab, Validity 2 187.00, billed 201.50) but its USD amount needs a July rate the agreement does not give. The correctly billed July invoice is simply clean.",
+ "reports": [
+  {
+   "as_of": "2043-08-05",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0905",
+      "class": "overcharge"
+     },
+     "verdict": "cannot_determine",
+     "actions": {
+      "supervised": "draft:request_document",
+      "autonomous": "execute:request_document"
+     },
+     "why": "no Annex F row for July 2043: ask the Schedule 1 treasury contact (Imran Qadri)",
+     "missing_doc": "Annex F"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0906",
+      "class": "overcharge"
+     },
+     "why": "billed at the Validity 2 rate 166.00: nothing to convert, so the missing FX row does not matter"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,51 @@
+{
+ "id": "w1_d04_backdated_amendment_after_invoice",
+ "world": "fenwick",
+ "split": "dev",
+ "families": [
+  "B",
+  "J"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w1_d04_backdated_amendment_after_invoice",
+ "feedback": {},
+ "why": "Billed at the Exhibit A rate, which was right until signed Amendment No. 1 arrived in batch_02 repricing the lane from 2043-05-01, before the 2043-05-10 pickup.",
+ "reports": [
+  {
+   "as_of": "2043-05-29",
+   "expect": [],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1290",
+      "class": "overcharge"
+     },
+     "why": "before the amendment arrives the Exhibit A rate 3.45 governs"
+    }
+   ],
+   "after": "batch_01"
+  },
+  {
+   "as_of": "2043-06-15",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1290",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "(1,035.00 + 155.25) - (960.00 + 144.00) = 86.25; key exists only because of the backdated amendment, so retro: true and no supersedes",
+     "amount_usd": "86.25",
+     "evidence_docs": [
+      "batch_02/0001.eml#Amendment-1-FRA-CHT-ATA-43.pdf"
+     ],
+     "retro": true
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

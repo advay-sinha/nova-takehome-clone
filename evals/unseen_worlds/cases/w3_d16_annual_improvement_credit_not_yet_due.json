@@ -1,0 +1,51 @@
+{
+ "id": "w3_d16_annual_improvement_credit_not_yet_due",
+ "world": "kittering",
+ "split": "dev",
+ "families": [
+  "F",
+  "G"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w3_d16_annual_improvement_credit_not_yet_due",
+ "feedback": {},
+ "why": "Contract Year 1 (1 April 2043 - 31 March 2044) Qualifying Spend is 45,000.00; the 1.5% improvement credit falls due 45 days after the anniversary (2044-05-16), so on 2044-04-20 it is earned but not yet due. Each quarter stays below the 30,000.00 rebate tier.",
+ "reports": [
+  {
+   "as_of": "2044-04-20",
+   "expect": [
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043",
+      "period": "CY1",
+      "credit_type": "promised_credit"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "internal:track_credit",
+      "autonomous": "internal:track_credit"
+     },
+     "why": "45,000.00 x 1.5% = 675.00",
+     "amount_usd": "675.00"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043",
+      "period": "2043-Q2",
+      "credit_type": "rebate"
+     },
+     "why": "20,000.00 is below the first tier"
+    },
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043",
+      "period": "2044-Q1",
+      "credit_type": "rebate"
+     },
+     "why": "25,000.00 is below the first tier"
+    }
+   ]
+  }
+ ]
+}

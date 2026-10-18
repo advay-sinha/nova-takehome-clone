@@ -166,6 +166,12 @@ class OverchargeTests(unittest.TestCase):
         self.assertEqual(got[march].amount_usd, Decimal("35.40"))
         self.assertNotIn(sept, got)
 
+    def test_weight_on_a_band_upper_bound_is_priced_in_that_band(self):
+        # 44.5 kg is the top of band 0-44.5 (5.10). Billed 5.60: (5.60 - 5.10) x 44.5 = 22.25, fuel 20% of
+        # (249.20 - 226.95) = 49.84 - 45.39 = 4.45: 26.70. An exclusive upper bound would leave the line unpriced.
+        inv = self.bill(5, "PW203", "2040-03-02", "44.5", "5.60")
+        self.assertEqual(getattr(self.run_rule().get(inv), "amount_usd", None), Decimal("26.70"))
+
     def test_inr_converted_once_per_finding(self):
         # same 23.60 + 4.72 = 28.32 INR over; Annex F March 80.00: 28.32 / 80 = 0.354 -> 0.35
         # (converting per line would give 0.30 + 0.06 = 0.36)

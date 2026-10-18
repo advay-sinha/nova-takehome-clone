@@ -1,0 +1,43 @@
+{
+ "id": "w4_d23_notice_deadline_window_edge",
+ "world": "aldous",
+ "split": "dev",
+ "families": [
+  "G"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w4_d23_notice_deadline_window_edge",
+ "feedback": {},
+ "why": "The agreement renews itself, so its operative date is the non-renewal notice deadline: 60 days before 31st January 2044 = 2043-12-02. On 2043-10-02 that is 61 days away (no alert); on 2043-10-03 it is 60 days away (alert).",
+ "reports": [
+  {
+   "as_of": "2043-10-02",
+   "expect": [],
+   "controls": [
+    {
+     "key": {
+      "contract_id": "ASC-QNO-CTA-43"
+     },
+     "why": "61 days before the deadline"
+    }
+   ]
+  },
+  {
+   "as_of": "2043-10-03",
+   "expect": [
+    {
+     "key": {
+      "contract_id": "ASC-QNO-CTA-43"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "internal:alert",
+      "autonomous": "internal:alert"
+     },
+     "why": "notice deadline 2043-12-02, 60 days after as_of",
+     "deadline": "2043-12-02"
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

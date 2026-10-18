@@ -1,0 +1,40 @@
+{
+ "id": "w4_d19_waiver_names_one_shipment",
+ "world": "aldous",
+ "split": "dev",
+ "families": [
+  "D"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w4_d19_waiver_names_one_shipment",
+ "feedback": {},
+ "why": "The Schedule 1 waivers contact waived the inside delivery charge for 235-77120044 only; the same charge on 235-77120045 stands.",
+ "reports": [
+  {
+   "as_of": "2043-03-31",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0118",
+      "class": "waived_but_billed"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "inside delivery on the waived AWB: 60.00",
+     "amount_usd": "60.00"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0118",
+      "class": "overcharge"
+     },
+     "why": "rates and fuel are right"
+    }
+   ]
+  }
+ ]
+}

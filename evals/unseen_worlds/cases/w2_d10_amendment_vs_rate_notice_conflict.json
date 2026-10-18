@@ -1,0 +1,40 @@
+{
+ "id": "w2_d10_amendment_vs_rate_notice_conflict",
+ "world": "sarvani",
+ "split": "dev",
+ "families": [
+  "B",
+  "I"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w2_d10_amendment_vs_rate_notice_conflict",
+ "feedback": {},
+ "why": "The signed amendment (140.00 from 01.04.2043) and the rates contact's notice (145.00 from 15.04.2043) both govern a 20.04.2043 pickup; clause 7.2 ranks neither.",
+ "reports": [
+  {
+   "as_of": "2043-04-30",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0611",
+      "class": "overcharge"
+     },
+     "verdict": "conflict",
+     "actions": {
+      "supervised": "escalate",
+      "autonomous": "escalate"
+     },
+     "why": "billed INR 27358.50; correct 26535.00 (notice) or 25620.00 (amendment): INR [823.50, 1738.50] / 83.4180 = USD [Decimal('9.87'), Decimal('20.84')]",
+     "amount_range": [
+      "9.87",
+      "20.84"
+     ],
+     "evidence_docs": [
+      "batch_01/0002.eml#Amendment-1-SAL-BDI-MSA-0743.pdf",
+      "batch_01/0003.eml"
+     ]
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

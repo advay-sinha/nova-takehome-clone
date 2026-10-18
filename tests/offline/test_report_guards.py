@@ -90,5 +90,18 @@ class EvidenceGuardTests(report_tests.ReportBase):
         self.assertIn("resolvable evidence", err.getvalue())
 
 
+class CurrencyTests(report_tests.ReportBase):
+    def test_inr_overcharge_is_converted_once_in_the_report(self):
+        # 118 kg at 4.20 billed against the 4.00 band: INR 23.60 over; Annex F March 80.00: 0.295 -> 0.30. The rule
+        # converts it; the report must not divide by the rate a second time (0.00, no finding).
+        self.k.fact("fx_rows", "batch_01/0001.eml#MSA.pdf", {"contract_id": report_tests.CID, "month": "2040-03",
+                                                            "inr_per_usd": "80.00"})
+        self.k.picked_up("PW180", "2040-03-02")
+        _, inv = self.k.invoice(180, "2040-03-20", [{"awb": "PW180", "label": "Air freight", "qty": "118",
+                                                     "rate": "4.20", "amount": "495.60", "pickup": "2040-03-02"}],
+                                currency="INR")
+        self.assertEqual(self.report().get(f"overcharge:{inv}", {}).get("amount_usd"), "0.30")
+
+
 if __name__ == "__main__":
     unittest.main()

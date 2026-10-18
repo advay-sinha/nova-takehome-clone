@@ -67,6 +67,8 @@ CREATE TABLE IF NOT EXISTS doc_checks (
 CREATE TABLE IF NOT EXISTS report_history (
     mode TEXT NOT NULL, key TEXT NOT NULL, as_of TEXT NOT NULL, item_id TEXT NOT NULL, verdict TEXT NOT NULL,
     amount TEXT, item_json TEXT NOT NULL, PRIMARY KEY (mode, key, as_of));
+-- every report run, including one that listed nothing: a later key can only be called retro against it
+CREATE TABLE IF NOT EXISTS report_runs (mode TEXT NOT NULL, as_of TEXT NOT NULL, PRIMARY KEY (mode, as_of));
 CREATE TABLE IF NOT EXISTS feedback_files (
     sha256 TEXT PRIMARY KEY, path TEXT NOT NULL, after_batch TEXT, decided_at TEXT, body_json TEXT NOT NULL,
     loaded_at TEXT NOT NULL);

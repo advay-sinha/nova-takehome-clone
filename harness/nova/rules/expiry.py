@@ -18,7 +18,11 @@ def operative_date(contract) -> tuple:
     for amd in sorted(contract.amendments, key=lambda a: a.effective or to_date("1900-01-01")):
         t = amd.fact.get("term") or {}
         if amd.signed is not False and to_date(t.get("initial_term_end")):
-            end, term, src = to_date(t.get("initial_term_end")), t, t.get("source") or amd.fact.data.get("_source")
+            # The amendment changes what it states (the end date); renewal and notice terms it is silent on stay.
+            # A notice deadline fixed for the old end no longer applies once the end moves.
+            term = {**{k: v for k, v in term.items() if k != "non_renewal_notice_deadline"},
+                    **{k: v for k, v in t.items() if v not in (None, "", [])}}
+            end, src = to_date(t.get("initial_term_end")), t.get("source") or amd.fact.data.get("_source")
     if src:
         ev = src | {"page": src.get("page") or 1}
     if term.get("auto_renews"):

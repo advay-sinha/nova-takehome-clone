@@ -1,0 +1,32 @@
+{
+ "id": "w4_h11_grace_boundary_five_and_six_days",
+ "world": "aldous",
+ "split": "holdout",
+ "families": [
+  "E"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w4_h11_grace_boundary_five_and_six_days",
+ "feedback": {},
+ "why": "ASC-43-0400 was paid exactly 5 days after its due date (inside the grace period), so its late charge is not owed; ASC-43-0401 was paid 6 days late, so one month (2.0%) is owed and billed correctly.",
+ "reports": [
+  {
+   "as_of": "2043-07-25",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0430",
+      "class": "late_fee_not_owed"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "only the ASC-43-0400 charge: 25.25",
+     "amount_usd": "25.25"
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

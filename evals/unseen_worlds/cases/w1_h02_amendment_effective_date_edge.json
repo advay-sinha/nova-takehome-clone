@@ -1,0 +1,41 @@
+{
+ "id": "w1_h02_amendment_effective_date_edge",
+ "world": "fenwick",
+ "split": "holdout",
+ "families": [
+  "A",
+  "B"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w1_h02_amendment_effective_date_edge",
+ "feedback": {},
+ "why": "Signed Amendment No. 2 sets 3.60 for pickups from 2043-08-01. The 2043-07-31 pickup keeps Exhibit A 3.85; the 2043-08-01 pickup is on the effective date and takes 3.60.",
+ "reports": [
+  {
+   "as_of": "2043-08-12",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1490",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "(770.00 + 118.58) - (720.00 + 110.88) = 57.70",
+     "amount_usd": "57.70"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1489",
+      "class": "overcharge"
+     },
+     "why": "the day before the amendment takes effect"
+    }
+   ]
+  }
+ ]
+}

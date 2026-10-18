@@ -1,0 +1,41 @@
+{
+ "id": "w1_d05_rate_notice_authority",
+ "world": "fenwick",
+ "split": "dev",
+ "families": [
+  "B",
+  "I"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w1_d05_rate_notice_authority",
+ "feedback": {},
+ "why": "Griffin Vale is not in Schedule 1, so his rate has no effect; Delphine Arkwright is the rates contact and her notice governs PHX1-SLC3 from 2043-06-01.",
+ "reports": [
+  {
+   "as_of": "2043-06-20",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1388",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "(729.00 + 110.08) - (693.00 + 104.64) = 41.44",
+     "amount_usd": "41.44"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1389",
+      "class": "overcharge"
+     },
+     "why": "billed at the authorised rate notice: 60.0 x 4.15"
+    }
+   ]
+  }
+ ]
+}

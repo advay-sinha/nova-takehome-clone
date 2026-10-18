@@ -1,0 +1,2701 @@
+{
+ "split": "dev",
+ "mode": "local_reader_only",
+ "env": {
+  "NOVA_LOCAL_READER_ONLY": "1",
+  "stripped": [
+   "ANTHROPIC_API_KEY",
+   "ANTHROPIC_BASE_URL",
+   "NOVA_LOCAL_LLM"
+  ]
+ },
+ "seconds": 39.3,
+ "summary": {
+  "by_class": {
+   "cashback": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   },
+   "duplicate": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   },
+   "expiry": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   },
+   "late_fee_not_owed": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   },
+   "late_fee_risk": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   },
+   "overcharge": {
+    "tp": 18,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   },
+   "waived_but_billed": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   }
+  },
+  "overall": {
+   "tp": 46,
+   "fp": 0,
+   "fn": 0,
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0
+  },
+  "amount_accuracy": {
+   "checked": 36,
+   "exact": 36
+  },
+  "money": {
+   "expected": "11807.84",
+   "recovered": "11807.84",
+   "wrongly_disputed": "0.00"
+  },
+  "conflict_and_abstention": {
+   "expected": 8,
+   "right": 8
+  },
+  "clean_controls": {
+   "total": 48,
+   "violated": 0,
+   "unread": 0
+  },
+  "citations": {
+   "items": 46,
+   "errors": 0,
+   "schema_errors": 0
+  },
+  "action_gate": {
+   "supervised_execute": 0,
+   "autonomous_unsafe_execute": 0
+  },
+  "miss_layer": {
+   "parser": 0
+  },
+  "cases_passed": 50,
+  "case_runs": 50
+ },
+ "by": {
+  "world": {
+   "fenwick": {
+    "by_class": {
+     "duplicate": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "overcharge": {
+      "tp": 8,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     }
+    },
+    "overall": {
+     "tp": 10,
+     "fp": 0,
+     "fn": 0,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0
+    },
+    "amount_accuracy": {
+     "checked": 10,
+     "exact": 10
+    },
+    "money": {
+     "expected": "1505.06",
+     "recovered": "1505.06",
+     "wrongly_disputed": "0.00"
+    },
+    "conflict_and_abstention": {
+     "expected": 0,
+     "right": 0
+    },
+    "clean_controls": {
+     "total": 12,
+     "violated": 0,
+     "unread": 0
+    },
+    "citations": {
+     "items": 10,
+     "errors": 0,
+     "schema_errors": 0
+    },
+    "action_gate": {
+     "supervised_execute": 0,
+     "autonomous_unsafe_execute": 0
+    },
+    "miss_layer": {
+     "parser": 0
+    },
+    "cases_passed": 12,
+    "case_runs": 12
+   },
+   "sarvani": {
+    "by_class": {
+     "duplicate": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "overcharge": {
+      "tp": 8,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     }
+    },
+    "overall": {
+     "tp": 10,
+     "fp": 0,
+     "fn": 0,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0
+    },
+    "amount_accuracy": {
+     "checked": 4,
+     "exact": 4
+    },
+    "money": {
+     "expected": "428.88",
+     "recovered": "428.88",
+     "wrongly_disputed": "0.00"
+    },
+    "conflict_and_abstention": {
+     "expected": 6,
+     "right": 6
+    },
+    "clean_controls": {
+     "total": 8,
+     "violated": 0,
+     "unread": 0
+    },
+    "citations": {
+     "items": 10,
+     "errors": 0,
+     "schema_errors": 0
+    },
+    "action_gate": {
+     "supervised_execute": 0,
+     "autonomous_unsafe_execute": 0
+    },
+    "miss_layer": {
+     "parser": 0
+    },
+    "cases_passed": 12,
+    "case_runs": 12
+   },
+   "kittering": {
+    "by_class": {
+     "cashback": {
+      "tp": 8,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "duplicate": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     }
+    },
+    "overall": {
+     "tp": 10,
+     "fp": 0,
+     "fn": 0,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0
+    },
+    "amount_accuracy": {
+     "checked": 10,
+     "exact": 10
+    },
+    "money": {
+     "expected": "9003.72",
+     "recovered": "9003.72",
+     "wrongly_disputed": "0.00"
+    },
+    "conflict_and_abstention": {
+     "expected": 0,
+     "right": 0
+    },
+    "clean_controls": {
+     "total": 8,
+     "violated": 0,
+     "unread": 0
+    },
+    "citations": {
+     "items": 10,
+     "errors": 0,
+     "schema_errors": 0
+    },
+    "action_gate": {
+     "supervised_execute": 0,
+     "autonomous_unsafe_execute": 0
+    },
+    "miss_layer": {
+     "parser": 0
+    },
+    "cases_passed": 12,
+    "case_runs": 12
+   },
+   "aldous": {
+    "by_class": {
+     "expiry": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "late_fee_not_owed": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "late_fee_risk": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "overcharge": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "waived_but_billed": {
+      "tp": 6,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     }
+    },
+    "overall": {
+     "tp": 16,
+     "fp": 0,
+     "fn": 0,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0
+    },
+    "amount_accuracy": {
+     "checked": 12,
+     "exact": 12
+    },
+    "money": {
+     "expected": "870.18",
+     "recovered": "870.18",
+     "wrongly_disputed": "0.00"
+    },
+    "conflict_and_abstention": {
+     "expected": 2,
+     "right": 2
+    },
+    "clean_controls": {
+     "total": 20,
+     "violated": 0,
+     "unread": 0
+    },
+    "citations": {
+     "items": 16,
+     "errors": 0,
+     "schema_errors": 0
+    },
+    "action_gate": {
+     "supervised_execute": 0,
+     "autonomous_unsafe_execute": 0
+    },
+    "miss_layer": {
+     "parser": 0
+    },
+    "cases_passed": 14,
+    "case_runs": 14
+   }
+  },
+  "mode": {
+   "supervised": {
+    "by_class": {
+     "cashback": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "duplicate": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "expiry": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "late_fee_not_owed": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "late_fee_risk": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "overcharge": {
+      "tp": 9,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "waived_but_billed": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     }
+    },
+    "overall": {
+     "tp": 23,
+     "fp": 0,
+     "fn": 0,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0
+    },
+    "amount_accuracy": {
+     "checked": 18,
+     "exact": 18
+    },
+    "money": {
+     "expected": "5903.92",
+     "recovered": "5903.92",
+     "wrongly_disputed": "0.00"
+    },
+    "conflict_and_abstention": {
+     "expected": 4,
+     "right": 4
+    },
+    "clean_controls": {
+     "total": 24,
+     "violated": 0,
+     "unread": 0
+    },
+    "citations": {
+     "items": 23,
+     "errors": 0,
+     "schema_errors": 0
+    },
+    "action_gate": {
+     "supervised_execute": 0,
+     "autonomous_unsafe_execute": 0
+    },
+    "miss_layer": {
+     "parser": 0
+    },
+    "cases_passed": 25,
+    "case_runs": 25
+   },
+   "autonomous": {
+    "by_class": {
+     "cashback": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "duplicate": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "expiry": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "late_fee_not_owed": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "late_fee_risk": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "overcharge": {
+      "tp": 9,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "waived_but_billed": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     }
+    },
+    "overall": {
+     "tp": 23,
+     "fp": 0,
+     "fn": 0,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0
+    },
+    "amount_accuracy": {
+     "checked": 18,
+     "exact": 18
+    },
+    "money": {
+     "expected": "5903.92",
+     "recovered": "5903.92",
+     "wrongly_disputed": "0.00"
+    },
+    "conflict_and_abstention": {
+     "expected": 4,
+     "right": 4
+    },
+    "clean_controls": {
+     "total": 24,
+     "violated": 0,
+     "unread": 0
+    },
+    "citations": {
+     "items": 23,
+     "errors": 0,
+     "schema_errors": 0
+    },
+    "action_gate": {
+     "supervised_execute": 0,
+     "autonomous_unsafe_execute": 0
+    },
+    "miss_layer": {
+     "parser": 0
+    },
+    "cases_passed": 25,
+    "case_runs": 25
+   }
+  },
+  "split": {
+   "dev": {
+    "by_class": {
+     "cashback": {
+      "tp": 8,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "duplicate": {
+      "tp": 6,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "expiry": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "late_fee_not_owed": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "late_fee_risk": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "overcharge": {
+      "tp": 18,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "waived_but_billed": {
+      "tp": 6,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     }
+    },
+    "overall": {
+     "tp": 46,
+     "fp": 0,
+     "fn": 0,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0
+    },
+    "amount_accuracy": {
+     "checked": 36,
+     "exact": 36
+    },
+    "money": {
+     "expected": "11807.84",
+     "recovered": "11807.84",
+     "wrongly_disputed": "0.00"
+    },
+    "conflict_and_abstention": {
+     "expected": 8,
+     "right": 8
+    },
+    "clean_controls": {
+     "total": 48,
+     "violated": 0,
+     "unread": 0
+    },
+    "citations": {
+     "items": 46,
+     "errors": 0,
+     "schema_errors": 0
+    },
+    "action_gate": {
+     "supervised_execute": 0,
+     "autonomous_unsafe_execute": 0
+    },
+    "miss_layer": {
+     "parser": 0
+    },
+    "cases_passed": 50,
+    "case_runs": 50
+   }
+  }
+ },
+ "runs": [
+  {
+   "case": "w1_d01_weight_break_upper_edge",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "A",
+    "H"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-03-31",
+     "expected": [
+      {
+       "key": "overcharge FRA-0043-1021",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "63.03",
+       "got_amount": "63.03",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 4.3,
+   "pass": true
+  },
+  {
+   "case": "w1_d01_weight_break_upper_edge",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "A",
+    "H"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-03-31",
+     "expected": [
+      {
+       "key": "overcharge FRA-0043-1021",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "63.03",
+       "got_amount": "63.03",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 4.3,
+   "pass": true
+  },
+  {
+   "case": "w1_d02_minimum_and_fees_clean",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "A"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-04-30",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 2,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.3,
+   "pass": true
+  },
+  {
+   "case": "w1_d02_minimum_and_fees_clean",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "A"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-04-30",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 2,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.3,
+   "pass": true
+  },
+  {
+   "case": "w1_d03_fuel_on_fees",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "A"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-02-28",
+     "expected": [
+      {
+       "key": "overcharge FRA-0043-0877",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "5.15",
+       "got_amount": "5.15",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 4.3,
+   "pass": true
+  },
+  {
+   "case": "w1_d03_fuel_on_fees",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "A"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-02-28",
+     "expected": [
+      {
+       "key": "overcharge FRA-0043-0877",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "5.15",
+       "got_amount": "5.15",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 4.3,
+   "pass": true
+  },
+  {
+   "case": "w1_d04_backdated_amendment_after_invoice",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "B",
+    "J"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-05-29",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    },
+    {
+     "as_of": "2043-06-15",
+     "expected": [
+      {
+       "key": "overcharge FRA-0043-1290",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "86.25",
+       "got_amount": "86.25",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 4.7,
+   "pass": true
+  },
+  {
+   "case": "w1_d04_backdated_amendment_after_invoice",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "B",
+    "J"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-05-29",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    },
+    {
+     "as_of": "2043-06-15",
+     "expected": [
+      {
+       "key": "overcharge FRA-0043-1290",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "86.25",
+       "got_amount": "86.25",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 4.7,
+   "pass": true
+  },
+  {
+   "case": "w1_d05_rate_notice_authority",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "B",
+    "I"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-06-20",
+     "expected": [
+      {
+       "key": "overcharge FRA-0043-1388",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "41.44",
+       "got_amount": "41.44",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.5,
+   "pass": true
+  },
+  {
+   "case": "w1_d05_rate_notice_authority",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "B",
+    "I"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-06-20",
+     "expected": [
+      {
+       "key": "overcharge FRA-0043-1388",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "41.44",
+       "got_amount": "41.44",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.5,
+   "pass": true
+  },
+  {
+   "case": "w1_d06_same_shipment_on_two_invoices",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "C"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-08-12",
+     "expected": [
+      {
+       "key": "duplicate FRA-0043-1530",
+       "class": "duplicate",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "556.66",
+       "got_amount": "556.66",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 5.0,
+   "pass": true
+  },
+  {
+   "case": "w1_d06_same_shipment_on_two_invoices",
+   "world": "fenwick",
+   "split": "dev",
+   "families": [
+    "C"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-08-12",
+     "expected": [
+      {
+       "key": "duplicate FRA-0043-1530",
+       "class": "duplicate",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "556.66",
+       "got_amount": "556.66",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 5.0,
+   "pass": true
+  },
+  {
+   "case": "w2_d07_inr_slab_edge_single_conversion",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "A",
+    "H"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-03-20",
+     "expected": [
+      {
+       "key": "overcharge SAL-INV-43-0712",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "21.33",
+       "got_amount": "21.33",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.1,
+   "pass": true
+  },
+  {
+   "case": "w2_d07_inr_slab_edge_single_conversion",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "A",
+    "H"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-03-20",
+     "expected": [
+      {
+       "key": "overcharge SAL-INV-43-0712",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "21.33",
+       "got_amount": "21.33",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.0,
+   "pass": true
+  },
+  {
+   "case": "w2_d08_no_annex_f_row",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "B",
+    "I"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-08-05",
+     "expected": [
+      {
+       "key": "overcharge SAL-INV-43-0905",
+       "class": "overcharge",
+       "expected_verdict": "cannot_determine",
+       "got_verdict": "cannot_determine",
+       "expected_amount": null,
+       "got_amount": null,
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.2,
+   "pass": true
+  },
+  {
+   "case": "w2_d08_no_annex_f_row",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "B",
+    "I"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-08-05",
+     "expected": [
+      {
+       "key": "overcharge SAL-INV-43-0905",
+       "class": "overcharge",
+       "expected_verdict": "cannot_determine",
+       "got_verdict": "cannot_determine",
+       "expected_amount": null,
+       "got_amount": null,
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.2,
+   "pass": true
+  },
+  {
+   "case": "w2_d09_paid_invoice_resent_across_batches",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "C"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-03-31",
+     "expected": [
+      {
+       "key": "duplicate SAL-INV-43-0418",
+       "class": "duplicate",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "193.11",
+       "got_amount": "193.11",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 4.5,
+   "pass": true
+  },
+  {
+   "case": "w2_d09_paid_invoice_resent_across_batches",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "C"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-03-31",
+     "expected": [
+      {
+       "key": "duplicate SAL-INV-43-0418",
+       "class": "duplicate",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "193.11",
+       "got_amount": "193.11",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 4.6,
+   "pass": true
+  },
+  {
+   "case": "w2_d10_amendment_vs_rate_notice_conflict",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "B",
+    "I"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-04-30",
+     "expected": [
+      {
+       "key": "overcharge SAL-INV-43-0611",
+       "class": "overcharge",
+       "expected_verdict": "conflict",
+       "got_verdict": "conflict",
+       "expected_amount": null,
+       "got_amount": null,
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.3,
+   "pass": true
+  },
+  {
+   "case": "w2_d10_amendment_vs_rate_notice_conflict",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "B",
+    "I"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-04-30",
+     "expected": [
+      {
+       "key": "overcharge SAL-INV-43-0611",
+       "class": "overcharge",
+       "expected_verdict": "conflict",
+       "got_verdict": "conflict",
+       "expected_amount": null,
+       "got_amount": null,
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.3,
+   "pass": true
+  },
+  {
+   "case": "w2_d11_tracking_date_decides_validity",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "A",
+    "H"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-07-30",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.0,
+   "pass": true
+  },
+  {
+   "case": "w2_d11_tracking_date_decides_validity",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "A",
+    "H"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-07-30",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.0,
+   "pass": true
+  },
+  {
+   "case": "w2_d12_amendment_names_missing_annex",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "B",
+    "I"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-05-23",
+     "expected": [
+      {
+       "key": "overcharge SAL-INV-43-0688",
+       "class": "overcharge",
+       "expected_verdict": "cannot_determine",
+       "got_verdict": "cannot_determine",
+       "expected_amount": null,
+       "got_amount": null,
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.4,
+   "pass": true
+  },
+  {
+   "case": "w2_d12_amendment_names_missing_annex",
+   "world": "sarvani",
+   "split": "dev",
+   "families": [
+    "B",
+    "I"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-05-23",
+     "expected": [
+      {
+       "key": "overcharge SAL-INV-43-0688",
+       "class": "overcharge",
+       "expected_verdict": "cannot_determine",
+       "got_verdict": "cannot_determine",
+       "expected_amount": null,
+       "got_amount": null,
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.4,
+   "pass": true
+  },
+  {
+   "case": "w3_d13_quarterly_rebate_due_unpaid",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "F",
+    "H"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-08-12",
+     "expected": [
+      {
+       "key": "cashback KOA-MWF-LSA-2043/2043-Q2/rebate",
+       "class": "cashback",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "689.36",
+       "got_amount": "689.36",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.4,
+   "pass": true
+  },
+  {
+   "case": "w3_d13_quarterly_rebate_due_unpaid",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "F",
+    "H"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-08-12",
+     "expected": [
+      {
+       "key": "cashback KOA-MWF-LSA-2043/2043-Q2/rebate",
+       "class": "cashback",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "689.36",
+       "got_amount": "689.36",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.4,
+   "pass": true
+  },
+  {
+   "case": "w3_d14_rebate_tier_boundary_part_credited",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "F",
+    "C"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-11-05",
+     "expected": [
+      {
+       "key": "cashback KOA-MWF-LSA-2043/2043-Q3/rebate",
+       "class": "cashback",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "1200.00",
+       "got_amount": "1200.00",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.6,
+   "pass": true
+  },
+  {
+   "case": "w3_d14_rebate_tier_boundary_part_credited",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "F",
+    "C"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-11-05",
+     "expected": [
+      {
+       "key": "cashback KOA-MWF-LSA-2043/2043-Q3/rebate",
+       "class": "cashback",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "1200.00",
+       "got_amount": "1200.00",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.6,
+   "pass": true
+  },
+  {
+   "case": "w3_d15_margin_step_down",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "F"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-07-10",
+     "expected": [
+      {
+       "key": "cashback KOA-MWF-LSA-2043/2043-Q2/margin_step_down",
+       "class": "cashback",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "240.00",
+       "got_amount": "240.00",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.2,
+   "pass": true
+  },
+  {
+   "case": "w3_d15_margin_step_down",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "F"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-07-10",
+     "expected": [
+      {
+       "key": "cashback KOA-MWF-LSA-2043/2043-Q2/margin_step_down",
+       "class": "cashback",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "240.00",
+       "got_amount": "240.00",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.2,
+   "pass": true
+  },
+  {
+   "case": "w3_d16_annual_improvement_credit_not_yet_due",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "F",
+    "G"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2044-04-20",
+     "expected": [
+      {
+       "key": "cashback KOA-MWF-LSA-2043/CY1/promised_credit",
+       "class": "cashback",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "675.00",
+       "got_amount": "675.00",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 2,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 4.8,
+   "pass": true
+  },
+  {
+   "case": "w3_d16_annual_improvement_credit_not_yet_due",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "F",
+    "G"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2044-04-20",
+     "expected": [
+      {
+       "key": "cashback KOA-MWF-LSA-2043/CY1/promised_credit",
+       "class": "cashback",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "675.00",
+       "got_amount": "675.00",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 2,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 4.7,
+   "pass": true
+  },
+  {
+   "case": "w3_d17_reordered_statement_columns_clean",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "H",
+    "A"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-06-05",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.0,
+   "pass": true
+  },
+  {
+   "case": "w3_d17_reordered_statement_columns_clean",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "H",
+    "A"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-06-05",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.0,
+   "pass": true
+  },
+  {
+   "case": "w3_d18_duplicate_net_of_credit_memos",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "C"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-06-10",
+     "expected": [
+      {
+       "key": "duplicate KOA-ST-4705",
+       "class": "duplicate",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "1697.50",
+       "got_amount": "1697.50",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.6,
+   "pass": true
+  },
+  {
+   "case": "w3_d18_duplicate_net_of_credit_memos",
+   "world": "kittering",
+   "split": "dev",
+   "families": [
+    "C"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-06-10",
+     "expected": [
+      {
+       "key": "duplicate KOA-ST-4705",
+       "class": "duplicate",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "1697.50",
+       "got_amount": "1697.50",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.7,
+   "pass": true
+  },
+  {
+   "case": "w4_d19_waiver_names_one_shipment",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "D"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-03-31",
+     "expected": [
+      {
+       "key": "waived_but_billed ASC-43-0118",
+       "class": "waived_but_billed",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "60.00",
+       "got_amount": "60.00",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.2,
+   "pass": true
+  },
+  {
+   "case": "w4_d19_waiver_names_one_shipment",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "D"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-03-31",
+     "expected": [
+      {
+       "key": "waived_but_billed ASC-43-0118",
+       "class": "waived_but_billed",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "60.00",
+       "got_amount": "60.00",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.2,
+   "pass": true
+  },
+  {
+   "case": "w4_d20_unauthorised_and_quoted_waivers",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "D",
+    "I"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-04-30",
+     "expected": [
+      {
+       "key": "waived_but_billed ASC-43-0141",
+       "class": "waived_but_billed",
+       "expected_verdict": "cannot_determine",
+       "got_verdict": "cannot_determine",
+       "expected_amount": null,
+       "got_amount": null,
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.5,
+   "pass": true
+  },
+  {
+   "case": "w4_d20_unauthorised_and_quoted_waivers",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "D",
+    "I"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-04-30",
+     "expected": [
+      {
+       "key": "waived_but_billed ASC-43-0141",
+       "class": "waived_but_billed",
+       "expected_verdict": "cannot_determine",
+       "got_verdict": "cannot_determine",
+       "expected_amount": null,
+       "got_amount": null,
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.5,
+   "pass": true
+  },
+  {
+   "case": "w4_d21_late_fees_inside_extension_and_grace",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "E"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-05-25",
+     "expected": [
+      {
+       "key": "late_fee_not_owed ASC-43-0161",
+       "class": "late_fee_not_owed",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "49.75",
+       "got_amount": "49.75",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.6,
+   "pass": true
+  },
+  {
+   "case": "w4_d21_late_fees_inside_extension_and_grace",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "E"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-05-25",
+     "expected": [
+      {
+       "key": "late_fee_not_owed ASC-43-0161",
+       "class": "late_fee_not_owed",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "49.75",
+       "got_amount": "49.75",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.6,
+   "pass": true
+  },
+  {
+   "case": "w4_d22_compounding_fee_and_risk_window",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "E"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-08-01",
+     "expected": [
+      {
+       "key": "late_fee_not_owed ASC-43-0220",
+       "class": "late_fee_not_owed",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "76.60",
+       "got_amount": "76.60",
+       "diff": [],
+       "layer": null
+      },
+      {
+       "key": "late_fee_risk ASC-43-0211",
+       "class": "late_fee_risk",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "15.69",
+       "got_amount": "15.69",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 2,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 2,
+     "n_actions": 2
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.8,
+   "pass": true
+  },
+  {
+   "case": "w4_d22_compounding_fee_and_risk_window",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "E"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-08-01",
+     "expected": [
+      {
+       "key": "late_fee_not_owed ASC-43-0220",
+       "class": "late_fee_not_owed",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "76.60",
+       "got_amount": "76.60",
+       "diff": [],
+       "layer": null
+      },
+      {
+       "key": "late_fee_risk ASC-43-0211",
+       "class": "late_fee_risk",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "15.69",
+       "got_amount": "15.69",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 2,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 2,
+     "n_actions": 2
+    }
+   ],
+   "local_only": [],
+   "seconds": 3.8,
+   "pass": true
+  },
+  {
+   "case": "w4_d23_notice_deadline_window_edge",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "G"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-10-02",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    },
+    {
+     "as_of": "2043-10-03",
+     "expected": [
+      {
+       "key": "expiry ASC-QNO-CTA-43",
+       "class": "expiry",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": null,
+       "got_amount": null,
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 2.5,
+   "pass": true
+  },
+  {
+   "case": "w4_d23_notice_deadline_window_edge",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "G"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-10-02",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 1,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    },
+    {
+     "as_of": "2043-10-03",
+     "expected": [
+      {
+       "key": "expiry ASC-QNO-CTA-43",
+       "class": "expiry",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": null,
+       "got_amount": null,
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 2.5,
+   "pass": true
+  },
+  {
+   "case": "w4_d24_one_off_feedback_and_injection",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "J",
+    "I",
+    "D"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-05-10",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 2,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    },
+    {
+     "as_of": "2043-06-10",
+     "expected": [
+      {
+       "key": "waived_but_billed ASC-43-0170",
+       "class": "waived_but_billed",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "40.00",
+       "got_amount": "40.00",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 2,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 11.1,
+   "pass": true
+  },
+  {
+   "case": "w4_d24_one_off_feedback_and_injection",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "J",
+    "I",
+    "D"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-05-10",
+     "expected": [],
+     "false_positives": [],
+     "controls_total": 2,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 0,
+     "n_actions": 0
+    },
+    {
+     "as_of": "2043-06-10",
+     "expected": [
+      {
+       "key": "waived_but_billed ASC-43-0170",
+       "class": "waived_but_billed",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "40.00",
+       "got_amount": "40.00",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 2,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 11.1,
+   "pass": true
+  },
+  {
+   "case": "w4_d25_scanned_invoice_wrong_break",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "H",
+    "A"
+   ],
+   "mode": "supervised",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-06-15",
+     "expected": [
+      {
+       "key": "overcharge ASC-43-0255",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "193.05",
+       "got_amount": "193.05",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 11.3,
+   "pass": true
+  },
+  {
+   "case": "w4_d25_scanned_invoice_wrong_break",
+   "world": "aldous",
+   "split": "dev",
+   "families": [
+    "H",
+    "A"
+   ],
+   "mode": "autonomous",
+   "errors": [],
+   "points": [
+    {
+     "as_of": "2043-06-15",
+     "expected": [
+      {
+       "key": "overcharge ASC-43-0255",
+       "class": "overcharge",
+       "expected_verdict": "finding",
+       "got_verdict": "finding",
+       "expected_amount": "193.05",
+       "got_amount": "193.05",
+       "diff": [],
+       "layer": null
+      }
+     ],
+     "false_positives": [],
+     "controls_total": 0,
+     "controls_violated": 0,
+     "controls_unread": [],
+     "schema_errors": [],
+     "citation_errors": [],
+     "unsafe_actions": [],
+     "n_items": 1,
+     "n_actions": 1
+    }
+   ],
+   "local_only": [],
+   "seconds": 11.1,
+   "pass": true
+  }
+ ]
+}

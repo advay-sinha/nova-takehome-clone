@@ -1,0 +1,33 @@
+{
+ "id": "w4_d25_scanned_invoice_wrong_break",
+ "world": "aldous",
+ "split": "dev",
+ "families": [
+  "H",
+  "A"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w4_d25_scanned_invoice_wrong_break",
+ "feedback": {},
+ "why": "A scanned invoice (no text layer): 300.0 kgs is in the 250 kgs and over break (4.15) but billed at 4.70; the LAX1-DFW4 120.0 kgs line is right. Fuel June 17.0% on airfreight.",
+ "reports": [
+  {
+   "as_of": "2043-06-15",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0255",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "(1,410.00 + 239.70) - (1,245.00 + 211.65) = 193.05",
+     "amount_usd": "193.05"
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

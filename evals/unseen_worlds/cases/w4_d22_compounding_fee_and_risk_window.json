@@ -1,0 +1,61 @@
+{
+ "id": "w4_d22_compounding_fee_and_risk_window",
+ "world": "aldous",
+ "split": "dev",
+ "families": [
+  "E"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w4_d22_compounding_fee_and_risk_window",
+ "feedback": {},
+ "why": "ASC-43-0130 was paid 45 days late: ceil(45/30) = 2 months, compounding: 157.88; the carrier billed 3 simple months (234.48). ASC-43-0211 is unpaid and due exactly 14 days after as_of; ASC-43-0212 is due 15 days after and ASC-43-0205 is due on as_of itself.",
+ "reports": [
+  {
+   "as_of": "2043-08-01",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0220",
+      "class": "late_fee_not_owed"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "234.48 - 157.88 = 76.60",
+     "amount_usd": "76.60"
+    },
+    {
+     "key": {
+      "invoice_id": "ASC-43-0211",
+      "class": "late_fee_risk"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "internal:payment_reminder",
+      "autonomous": "internal:payment_reminder"
+     },
+     "why": "one month: 2.0% x 784.31 = 15.69",
+     "amount_usd": "15.69",
+     "deadline": "2043-08-15"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0212",
+      "class": "late_fee_risk"
+     },
+     "why": "due 15 days after as_of: outside the window"
+    },
+    {
+     "key": {
+      "invoice_id": "ASC-43-0205",
+      "class": "late_fee_risk"
+     },
+     "why": "due on as_of: 0 days is not inside 1 to 14"
+    }
+   ]
+  }
+ ]
+}

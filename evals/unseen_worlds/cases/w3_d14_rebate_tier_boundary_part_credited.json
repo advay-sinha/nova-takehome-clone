@@ -1,0 +1,37 @@
+{
+ "id": "w3_d14_rebate_tier_boundary_part_credited",
+ "world": "kittering",
+ "split": "dev",
+ "families": [
+  "F",
+  "C"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w3_d14_rebate_tier_boundary_part_credited",
+ "feedback": {},
+ "why": "Q3 2043 Qualifying Spend is exactly USD 60,000.00, which reaches the 4% tier ('or more'); the carrier credited only 2% (1,200.00).",
+ "reports": [
+  {
+   "as_of": "2043-11-05",
+   "expect": [
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043",
+      "period": "2043-Q3",
+      "credit_type": "rebate"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:claim_credit",
+      "autonomous": "execute:claim_credit"
+     },
+     "why": "60,000.00 x 4% = 2400.00 less credit memo 1,200.00 = 1200.00",
+     "amount_usd": "1200.00",
+     "evidence_docs": [
+      "batch_01/0006.eml#KOA-CN-0431.pdf"
+     ]
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+{
+ "id": "w1_h01_accessorials_above_exhibit_c",
+ "world": "fenwick",
+ "split": "holdout",
+ "families": [
+  "A"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w1_h01_accessorials_above_exhibit_c",
+ "feedback": {},
+ "why": "Exhibit C: screening USD 0.15 per kg and pickup USD 45.00; billed 0.18 per kg and 55.00. Linehaul and FAF are right.",
+ "reports": [
+  {
+   "as_of": "2043-09-25",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1610",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "(27.00 - 22.50) + (55.00 - 45.00) = 14.50",
+     "amount_usd": "14.50"
+    }
+   ],
+   "controls": []
+  }
+ ]
+}
