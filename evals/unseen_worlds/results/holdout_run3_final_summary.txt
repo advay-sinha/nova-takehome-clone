@@ -1,0 +1,61 @@
+Unseen-world evaluation, split=holdout, local document reader only (NOVA_LOCAL_READER_ONLY=1, no SDK, CLI or response cache)
+
+case runs passed: 28 / 28 (each case x 2 modes)
+overall: P 1.00 R 1.00 F1 1.00 (tp 28, fp 0, fn 0)
+amounts exact: 24 / 24; recovered 6754.60 of 6754.60; wrongly disputed 0.00
+conflict/cannot_determine right: 0 / 0
+clean controls kept: 24 / 24 (0 not exercised: invoice never read)
+citation errors: 0, schema errors: 0
+action gate: execute in supervised 0, unsafe execute in autonomous 0
+misses by layer: {'parser': 0}
+
+by class:
+  cashback             tp   2 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  duplicate            tp   2 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  expiry               tp   4 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  late_fee_not_owed    tp   2 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  overcharge           tp  14 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  waived_but_billed    tp   4 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+
+by world:
+  aldous                       passed 6/6  F1 1.00
+  fenwick                      passed 6/6  F1 1.00
+  kittering                    passed 8/8  F1 1.00
+  sarvani                      passed 8/8  F1 1.00
+
+by mode:
+  autonomous                   passed 14/14  F1 1.00
+  supervised                   passed 14/14  F1 1.00
+
+by split:
+  holdout                      passed 28/28  F1 1.00
+
+cases:
+  PASS  w1_h01_accessorials_above_exhibit_c          supervised    4.4s
+  PASS  w1_h01_accessorials_above_exhibit_c          autonomous    4.4s
+  PASS  w1_h02_amendment_effective_date_edge         supervised    4.4s
+  PASS  w1_h02_amendment_effective_date_edge         autonomous    4.4s
+  PASS  w1_h03_rate_accepted_feedback_scope          supervised    7.5s
+  PASS  w1_h03_rate_accepted_feedback_scope          autonomous    7.5s
+  PASS  w2_h04_inr_fees_and_slab_edges_clean         supervised    3.1s
+  PASS  w2_h04_inr_fees_and_slab_edges_clean         autonomous    3.1s
+  PASS  w2_h05_backdated_inr_amendment               supervised    4.8s
+  PASS  w2_h05_backdated_inr_amendment               autonomous    4.9s
+  PASS  w2_h06_monthly_waiver_inr                    supervised    3.3s
+  PASS  w2_h06_monthly_waiver_inr                    autonomous    3.4s
+  PASS  w2_h13_all_dates_ambiguous_dotted            supervised    3.1s
+  PASS  w2_h13_all_dates_ambiguous_dotted            autonomous    3.0s
+  PASS  w3_h07_rebate_just_below_tier                supervised    3.4s
+  PASS  w3_h07_rebate_just_below_tier                autonomous    3.4s
+  PASS  w3_h08_margin_threshold_reached_then_exceeded supervised    3.7s
+  PASS  w3_h08_margin_threshold_reached_then_exceeded autonomous    3.6s
+  PASS  w3_h09_shipment_rebilled_on_next_statement   supervised    3.2s
+  PASS  w3_h09_shipment_rebilled_on_next_statement   autonomous    3.2s
+  PASS  w3_h14_term_extended_before_notice_deadline  supervised    3.6s
+  PASS  w3_h14_term_extended_before_notice_deadline  autonomous    3.6s
+  PASS  w4_h10_monthly_waiver_scope                  supervised    3.3s
+  PASS  w4_h10_monthly_waiver_scope                  autonomous    3.4s
+  PASS  w4_h11_grace_boundary_five_and_six_days      supervised    3.6s
+  PASS  w4_h11_grace_boundary_five_and_six_days      autonomous    3.6s
+  PASS  w4_h12_term_extension_removes_alert          supervised    3.5s
+  PASS  w4_h12_term_extension_removes_alert          autonomous    3.4s

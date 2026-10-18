@@ -26,6 +26,27 @@ def norm_id(s) -> str:
     return re.sub(r"[\s#:]", "", str(s or "")).upper()
 
 
+_KG = r"(\d+(?:\.\d+)?)\s*(?:kg|kgs|kilograms?)?"
+WEIGHT_BREAKS = [   # (pattern, lower group, upper group); lower and upper bounds are inclusive
+    (re.compile(_KG + r"\s*(?:-|–|to|through)\s*" + _KG, re.I), 1, 2),
+    (re.compile(_KG + r"\s*\+", re.I), 1, None),
+    (re.compile(_KG + r"\s+(?:and|or)\s+(?:over|above|more)", re.I), 1, None),
+    (re.compile(r"up\s+to\s+(?:and\s+including\s+)?" + _KG, re.I), None, 1),
+]
+
+
+def parse_band(text) -> tuple[Decimal | None, Decimal | None, bool]:
+    """A weight break as printed -> (lower kg, upper kg, is_minimum_charge). Both bounds inclusive; an open end is
+    None. Exclusive wordings ("under 100 kg") are not guessed: they return (None, None, False)."""
+    t = str(text or "")
+    if re.search(r"\bminimum\b", t, re.I):
+        return None, None, True
+    for pattern, lo, hi in WEIGHT_BREAKS:
+        if (m := pattern.search(t)):
+            return (Decimal(m[lo]) if lo else Decimal(0)), (Decimal(m[hi]) if hi else None), False
+    return None, None, False
+
+
 def norm_label(s) -> str:
     """Charge labels compared case- and space-insensitively (OCR drops spaces)."""
     return re.sub(r"[^0-9a-z]", "", unicodedata.normalize("NFKC", str(s or "")).lower())
@@ -300,8 +321,8 @@ class World:
                 continue
             lo, hi = dec(f.get("band_min_kg")), dec(f.get("band_max_kg"))
             band = str(f.get("band") or "")
-            if lo is None and (m := re.match(r"\s*(\d+(?:\.\d+)?)\s*(?:-\s*(\d+(?:\.\d+)?)|\+)", band)):
-                lo, hi = Decimal(m[1]), (Decimal(m[2]) if m[2] else None)
+            if lo is None:
+                lo, hi, _ = parse_band(band)
             if "+" in band and hi is not None and lo == hi:
                 hi = None
             inst.bands.append(Band(str(f.get("lane") or "").upper(), lo, hi, bool(f.get("is_minimum_charge")), rate,
@@ -321,6 +342,12 @@ class World:
         for f in self.of("charge_codes"):
             c, _ = owner(f)
             code = canonical_code(f.get("code"), f.get("name"))
+            # A contract's own word for a role ("Linehaul") may only be explained by its alias ("also billed as:
+            # Freight"): the aliases name the same charge, so they may identify the role too.
+            for alias in (f.get("aliases") or []) if code not in ROLES else []:
+                if (by_alias := canonical_code(f.get("code"), alias)) in ROLES:
+                    code = by_alias
+                    break
             if c and code:
                 c.code_facts[code] = f
                 for label in [f.get("name"), *(f.get("aliases") or [])]:

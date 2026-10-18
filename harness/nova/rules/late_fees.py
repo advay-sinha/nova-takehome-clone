@@ -15,11 +15,10 @@ from decimal import Decimal
 
 from ..money import dec, q2
 from ..world import World, norm_id, norm_label, to_date
-from .common import Candidate
+from .common import Candidate, ledger_state
 from .duplicate import _ledger
 
 ZERO = Decimal("0")
-OPEN = ("open", "unpaid", "outstanding", "due", "overdue")
 
 
 def due_date(world: World, contract, inv: str, ledger_row, header) -> tuple:
@@ -126,7 +125,7 @@ def detect(world: World, disputed=lambda inv: ZERO) -> list[Candidate]:
             found.append(c)
     # ---- unpaid invoices about to start costing a fee ---------------------------------------------------------------
     for inv, row in ledger.items():
-        if str(row.get("status") or "").lower() not in OPEN or row.get("paid_date"):
+        if ledger_state(row) != "open":
             continue
         hdr = headers.get(inv)
         contract = world.contract_of(hdr.get("contract_id")) if hdr else None

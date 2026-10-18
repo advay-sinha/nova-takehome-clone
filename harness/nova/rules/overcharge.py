@@ -21,6 +21,7 @@ from decimal import Decimal
 
 from ..money import dec, q2
 from ..world import Band, Contract, Fact, World, canonical_code, norm_id, norm_label, to_date
+from ..world import parse_band as world_parse_band
 from .common import Candidate
 
 ZERO = Decimal("0")
@@ -59,12 +60,7 @@ def months_of(condition: str | None) -> set[int] | None:
 
 
 def parse_band(text: str) -> tuple[Decimal | None, Decimal | None, bool]:
-    t = str(text or "").lower()
-    if "minimum" in t:
-        return None, None, True
-    if (m := re.search(r"(\d+(?:\.\d+)?)\s*(?:-\s*(\d+(?:\.\d+)?)|\+)", t)):
-        return Decimal(m[1]), (Decimal(m[2]) if m[2] else None), False
-    return None, None, False
+    return world_parse_band(text)
 
 
 class Pricer:

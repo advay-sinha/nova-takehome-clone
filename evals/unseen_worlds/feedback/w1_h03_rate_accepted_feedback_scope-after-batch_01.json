@@ -1,0 +1,46 @@
+{
+ "schema_version": "1.0",
+ "world": "UW1",
+ "after_batch": "batch_01",
+ "decided_at": "2043-09-22T14:00:00Z",
+ "decided_by": {
+  "name": "Rafe Ostrom",
+  "role": "AP Supervisor",
+  "entity": "CHT-US"
+ },
+ "items": [
+  {
+   "item_id": "uw1-fb-07",
+   "decision": "close",
+   "solicited": true,
+   "finding_key": {
+    "invoice_id": "FRA-0043-1701",
+    "class": "overcharge"
+   },
+   "fact": {
+    "type": "rate_accepted",
+    "subject": {
+     "contract_id": "FRA-CHT-ATA-43",
+     "lane": "PHX1-SLC3"
+    },
+    "value": {
+     "source": "rate notice",
+     "sent_by": "Griffin Vale",
+     "sent_on": "2043-08-25",
+     "effective_from": "2043-09-01",
+     "effective_to": "2043-12-31"
+    },
+    "evidence": "Fenwick confirmed the notice in writing"
+   },
+   "scope": {
+    "kind": "standing",
+    "applies_to": {
+     "contract_id": "FRA-CHT-ATA-43",
+     "lane": "PHX1-SLC3"
+    },
+    "valid_from": "2043-09-01",
+    "valid_to": "2043-12-31"
+   }
+  }
+ ]
+}

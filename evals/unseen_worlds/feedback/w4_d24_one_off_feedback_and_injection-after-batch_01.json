@@ -1,0 +1,44 @@
+{
+ "schema_version": "1.0",
+ "world": "UW4",
+ "after_batch": "batch_01",
+ "decided_at": "2043-05-12T09:30:00Z",
+ "decided_by": {
+  "name": "Hugo Marchetti",
+  "role": "AP Manager",
+  "entity": "QNO-US"
+ },
+ "items": [
+  {
+   "item_id": "uw4-fb-01",
+   "decision": "one_off_approval",
+   "solicited": false,
+   "finding_key": {
+    "invoice_id": "ASC-43-0170",
+    "class": "waived_but_billed"
+   },
+   "fact": {
+    "type": "waiver_scope",
+    "subject": {
+     "person": "Rufus Penhaligon",
+     "party": "ASC-US"
+    },
+    "value": {
+     "months": [
+      "2043-03"
+     ]
+    },
+    "evidence": "Confirmed with the carrier by phone"
+   },
+   "scope": {
+    "kind": "one_off",
+    "applies_to": {
+     "invoice_id": "ASC-43-0170"
+    },
+    "valid_from": "2043-05-12",
+    "valid_to": null
+   },
+   "note": "March liftgate on this invoice only"
+  }
+ ]
+}

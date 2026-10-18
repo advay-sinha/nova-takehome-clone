@@ -1,0 +1,27 @@
+{
+ "id": "w2_h04_inr_fees_and_slab_edges_clean",
+ "world": "sarvani",
+ "split": "holdout",
+ "families": [
+  "A",
+  "H"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w2_h04_inr_fees_and_slab_edges_clean",
+ "feedback": {},
+ "why": "45.0 kg opens the 45 - 99.9 kg slab (182.50) and 44.9 kg closes the up to 44.9 kg slab (174.00); X-ray 4.00/kg and documentation 350.00 match Annex D; fuel May 22.5% on freight.",
+ "reports": [
+  {
+   "as_of": "2043-05-15",
+   "expect": [],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-1001",
+      "class": "overcharge"
+     },
+     "why": "slab edges and fees billed exactly"
+    }
+   ]
+  }
+ ]
+}

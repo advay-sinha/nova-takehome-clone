@@ -1,0 +1,42 @@
+{
+ "id": "w3_h08_margin_threshold_reached_then_exceeded",
+ "world": "kittering",
+ "split": "holdout",
+ "families": [
+  "F"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w3_h08_margin_threshold_reached_then_exceeded",
+ "feedback": {},
+ "why": "Carrier cost reaches exactly 40,000.00 on the May statement, which does not exceed the threshold; the June statement takes it to 45,000.00 and is the crossing statement (still 6.0%). July and August should carry 4.0%: one Q3 2043 item; nothing for Q2.",
+ "reports": [
+  {
+   "as_of": "2043-10-05",
+   "expect": [
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043",
+      "period": "2043-Q3",
+      "credit_type": "margin_step_down"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:claim_credit",
+      "autonomous": "execute:claim_credit"
+     },
+     "why": "(600.00 - 400.00) + (480.00 - 320.00) = 360.00",
+     "amount_usd": "360.00"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043",
+      "period": "2043-Q2",
+      "credit_type": "margin_step_down"
+     },
+     "why": "40,000.00 reached but not exceeded in Q2"
+    }
+   ]
+  }
+ ]
+}

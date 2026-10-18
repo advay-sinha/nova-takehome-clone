@@ -1,0 +1,40 @@
+{
+ "id": "w4_d21_late_fees_inside_extension_and_grace",
+ "world": "aldous",
+ "split": "dev",
+ "families": [
+  "E"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w4_d21_late_fees_inside_extension_and_grace",
+ "feedback": {},
+ "why": "ASC-43-0101 was paid on 2043-05-12, inside the authorised extension to 2043-05-15; ASC-43-0104 was paid 4 days after its due date, inside the 5-day grace. Neither late charge is owed.",
+ "reports": [
+  {
+   "as_of": "2043-05-25",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0161",
+      "class": "late_fee_not_owed"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "29.01 + 20.74 = 49.75",
+     "amount_usd": "49.75"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0161",
+      "class": "overcharge"
+     },
+     "why": "the new shipment is priced right"
+    }
+   ]
+  }
+ ]
+}

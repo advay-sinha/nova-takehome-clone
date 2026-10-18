@@ -1,0 +1,33 @@
+{
+ "id": "w2_d07_inr_slab_edge_single_conversion",
+ "world": "sarvani",
+ "split": "dev",
+ "families": [
+  "A",
+  "H"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w2_d07_inr_slab_edge_single_conversion",
+ "feedback": {},
+ "why": "100.5 kg is in the 100 kg + slab (Validity 1: INR 168.00) but billed at the 45 - 99.9 kg rate 182.50; 99.9 kg at 182.50 is right. Fuel March 22.0% on freight.",
+ "reports": [
+  {
+   "as_of": "2043-03-20",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0712",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "INR (18,341.25 + 4,035.08) - (16,884.00 + 3,714.48) = 1777.85; / Annex F March 2043 83.3333 once = USD 21.33 (per-line conversion would give 21.34)",
+     "amount_usd": "21.33"
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

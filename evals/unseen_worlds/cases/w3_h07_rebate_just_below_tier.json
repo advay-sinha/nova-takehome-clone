@@ -1,0 +1,27 @@
+{
+ "id": "w3_h07_rebate_just_below_tier",
+ "world": "kittering",
+ "split": "holdout",
+ "families": [
+  "F"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w3_h07_rebate_just_below_tier",
+ "feedback": {},
+ "why": "Q3 2043 Qualifying Spend is 29,990.00, ten dollars short of the 30,000.00 tier: no rebate.",
+ "reports": [
+  {
+   "as_of": "2043-11-10",
+   "expect": [],
+   "controls": [
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043",
+      "period": "2043-Q3",
+      "credit_type": "rebate"
+     },
+     "why": "below the first tier"
+    }
+   ]
+  }
+ ]
+}

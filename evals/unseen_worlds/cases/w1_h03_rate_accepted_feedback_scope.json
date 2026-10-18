@@ -1,0 +1,84 @@
+{
+ "id": "w1_h03_rate_accepted_feedback_scope",
+ "world": "fenwick",
+ "split": "holdout",
+ "families": [
+  "J",
+  "B"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w1_h03_rate_accepted_feedback_scope",
+ "feedback": {
+  "batch_01": "evals/unseen_worlds/feedback/w1_h03_rate_accepted_feedback_scope-after-batch_01.json"
+ },
+ "why": "Griffin Vale is not the rates contact, so FRA-0043-1701 is an overcharge until the AP supervisor closes it and accepts his PHX1-SLC3 rate for September-December. After that 4.25 is the PHX1-SLC3 rate: 4.25 billed is fine, 4.40 is measured against 4.25 (learned_at); ORD5-MIA2 keeps Exhibit A.",
+ "reports": [
+  {
+   "as_of": "2043-09-20",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1701",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "vs Exhibit A 3.95: 24.24",
+     "amount_usd": "24.24"
+    }
+   ],
+   "controls": [],
+   "after": "batch_01"
+  },
+  {
+   "as_of": "2043-10-20",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1756",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "4.40 vs accepted 4.25: 10.40",
+     "amount_usd": "10.40",
+     "learned_at": true
+    },
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1757",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "other lane, Exhibit A 3.85: 34.67",
+     "amount_usd": "34.67"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1701",
+      "class": "overcharge"
+     },
+     "why": "closed by feedback"
+    },
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1755",
+      "class": "overcharge"
+     },
+     "why": "billed at the accepted rate"
+    }
+   ]
+  }
+ ]
+}

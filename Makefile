@@ -5,7 +5,10 @@ PY      ?= .venv/bin/python
 HARNESS ?= harness/harness.py
 MODE    ?= both
 
-.PHONY: help setup venv run grade sheet eval validate test test-mutations clean
+LOCAL_HARNESS = $(HARNESS) --local-reader-only
+SPLIT ?= dev
+
+.PHONY: help setup venv run grade sheet eval validate test test-mutations clean grade-local sheet-local eval-local eval-unseen
 help:
 	@echo "make setup      create .venv and install harness/requirements.txt"
 	@echo "make grade      replay the practice mailbox through your harness; writes report_card.txt and .json"
@@ -15,6 +18,9 @@ help:
 	@echo "make test       run offline synthetic regression tests (no API calls)"
 	@echo "make test-mutations  check that regression tests detect deliberately broken controls"
 	@echo "make run        run the practice mailbox once; writes out/practice_report.json"
+	@echo "make grade-local / sheet-local / eval-local   the same with the local document reader only (no SDK,"
+	@echo "                CLI or response cache); results go to out/local_only/, never the submission artifacts"
+	@echo "make eval-unseen  score the unseen-world cases, local reader only (SPLIT=dev|holdout|all, K=<text>)"
 
 setup:
 	@if command -v uv >/dev/null 2>&1; then \
@@ -49,6 +55,21 @@ test: venv
 
 test-mutations: venv
 	$(PY) tools/check_mutations.py
+
+grade-local: venv
+	@mkdir -p out/local_only; PYTHONIOENCODING=utf-8 $(PY) grader/run_grader.py --harness "python $(LOCAL_HARNESS)" \
+		--data data/scenarios --key data/scenarios/answers --mode $(MODE) --out out/local_only/report_card.json \
+		> out/local_only/report_card.txt; rc=$$?; cat out/local_only/report_card.txt; exit $$rc
+
+sheet-local: venv
+	$(PY) tools/run_mailbox.py --data data/exam --harness "$(LOCAL_HARNESS)" --out out/local_only/exam_report.json \
+		--sheet out/local_only/answer_sheet.json --state-dir out/state_local_exam
+
+eval-local: venv
+	@mkdir -p out/local_only; $(PY) evals/run_evals.py --harness "$(LOCAL_HARNESS)" --out out/local_only/eval_results.json
+
+eval-unseen: venv
+	$(PY) evals/unseen_worlds/run_unseen.py --split $(SPLIT) $(if $(K),-k $(K),)
 
 clean:
 	rm -rf out/state_* .state

@@ -214,7 +214,8 @@ def build(store, as_of: str, mode: str, hooks=None) -> dict:
     _actions(world, cands, mode)
     previous = {r["key"]: r for r in store.db.execute(
         "SELECT * FROM report_history WHERE mode = ? AND as_of < ? ORDER BY as_of", (mode, as_of))}
-    prev_as_of = max((r["as_of"] for r in previous.values()), default=None)
+    prev_as_of = store.db.execute("SELECT max(as_of) FROM report_runs WHERE mode = ? AND as_of < ?",
+                                  (mode, as_of)).fetchone()[0]
     report = {"schema_version": SCHEMA_VERSION, "as_of": as_of, "mode": mode, "findings": [],
               "portfolio": {"cashback": [], "expiry": [], "late_fee_risk": []}}
     history_rows = []
@@ -272,6 +273,7 @@ def build(store, as_of: str, mode: str, hooks=None) -> dict:
     with store.db:
         store.db.execute("DELETE FROM report_history WHERE mode = ? AND as_of = ?", (mode, as_of))
         store.db.executemany("INSERT INTO report_history VALUES (?,?,?,?,?,?,?)", history_rows)
+        store.db.execute("INSERT OR IGNORE INTO report_runs VALUES (?, ?)", (mode, as_of))
     return report
 
 

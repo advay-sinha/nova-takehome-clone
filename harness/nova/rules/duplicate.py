@@ -12,7 +12,7 @@ from decimal import Decimal
 
 from ..money import dec, q2
 from ..world import World, norm_id, to_date
-from .common import Candidate
+from .common import Candidate, ledger_state
 
 ZERO = Decimal("0")
 SKIP_CODES = {"TAX", "DUTY", "LATE"}
@@ -44,7 +44,7 @@ def detect(world: World) -> list[Candidate]:
         if len(emails) < 2:
             continue
         row = ledger.get(inv)
-        if row is None or str(row.get("status") or "").lower() not in ("paid", "scheduled"):
+        if row is None or ledger_state(row) not in ("paid", "scheduled"):
             continue
         for later in emails[1:]:
             reqs = [r for r in asks.get(inv, []) if world.docs[r.doc].email_doc == later]

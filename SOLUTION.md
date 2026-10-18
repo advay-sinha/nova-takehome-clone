@@ -19,9 +19,12 @@ The grader's three commands are unchanged (`ingest`, `report --as-of --mode`, `f
   API calls, a model response cache or saved answers. Contract-specific identifiers, codes, rates and contacts come
   from the documents. A recognised invoice with no parseable billed rows fails with an actionable error.
   Authentication or rate-limit failures from an already configured model retain their existing error/retry handling.
+- `harness.py --local-reader-only <command> ...` (or `NOVA_LOCAL_READER_ONLY=1`) forces the local reader even when a
+  key or CLI is present; constructing a provider or touching the response cache then raises. `make grade-local`,
+  `sheet-local`, `eval-local` and `eval-unseen` use it and write to `out/local_only/`, never the submission files.
 
 `make test` runs the offline synthetic suite using the same virtualenv as the harness. `make test-mutations`
-verifies eight deliberately broken controls in temporary copies; every unmodified control must pass first, and
+verifies twenty deliberately broken controls in temporary copies; every unmodified control must pass first, and
 crashes, import errors and skipped tests do not count as a detected regression. Neither command calls a model.
 
 The unchanged supplied grading workflow runs `make setup`, `make grade` and `make validate`. With an empty
@@ -42,6 +45,12 @@ by the next step. Progress lines (`extract k/N done ...`) go to stderr, the repo
   passes 20/20. A fresh exam run reproduces the committed totals, class ids and amounts, deadlines, conflict and
   missing-document entries, including $8,165.33 total savings. This validates the local path on these mailboxes;
   it does not measure a fresh live model extraction or establish performance on unseen layouts.
+- **Unseen synthetic worlds** (`evals/unseen_worlds/`, notes in `SUITE.md`): four invented worlds with their own
+  contract structure, Schedule 1 layouts, currencies, invoice/statement layouts, dates and spreadsheet headers;
+  expected answers from a glossary-only Decimal oracle; local reader only. Development 25 cases, 50/50 case-runs
+  (both modes). Holdout, run once on the frozen reader: 20/24 case-runs (10 of 12 cases); the two failures (all-
+  ambiguous dotted dates, an amendment extending the term) were fixed generally with tests, and two fresh holdout
+  cases then passed first time (final holdout 28/28). The suite drove the reader fixes listed in `SUITE.md`.
 - **Reading.** Every email, PDF and Excel sheet is read with the grader's own text layer, so quotes resolve. Receipt
   times are in UTC; a resent file stays a separate occurrence; scans are read by local OCR. The practice and exam
   mailboxes (163 and 86 documents) have no unreadable document.

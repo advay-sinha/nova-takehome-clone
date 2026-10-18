@@ -1,0 +1,32 @@
+{
+ "id": "w1_d03_fuel_on_fees",
+ "world": "fenwick",
+ "split": "dev",
+ "families": [
+  "A"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w1_d03_fuel_on_fees",
+ "feedback": {},
+ "why": "Clause 2.4 applies FAF to linehaul only; the carrier applied 14.30% to linehaul plus screening.",
+ "reports": [
+  {
+   "as_of": "2043-02-28",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-0877",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "14.30% of 960.00 = 137.28 billed, 14.30% of 924.00 = 132.13 owed: 5.15",
+     "amount_usd": "5.15"
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

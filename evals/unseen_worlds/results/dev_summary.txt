@@ -1,0 +1,84 @@
+Unseen-world evaluation, split=dev, local document reader only (NOVA_LOCAL_READER_ONLY=1, no SDK, CLI or response cache)
+
+case runs passed: 50 / 50 (each case x 2 modes)
+overall: P 1.00 R 1.00 F1 1.00 (tp 46, fp 0, fn 0)
+amounts exact: 36 / 36; recovered 11807.84 of 11807.84; wrongly disputed 0.00
+conflict/cannot_determine right: 8 / 8
+clean controls kept: 48 / 48 (0 not exercised: invoice never read)
+citation errors: 0, schema errors: 0
+action gate: execute in supervised 0, unsafe execute in autonomous 0
+misses by layer: {'parser': 0}
+
+by class:
+  cashback             tp   8 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  duplicate            tp   6 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  expiry               tp   2 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  late_fee_not_owed    tp   4 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  late_fee_risk        tp   2 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  overcharge           tp  18 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+  waived_but_billed    tp   6 fp   0 fn   0  P 1.00 R 1.00 F1 1.00
+
+by world:
+  aldous                       passed 14/14  F1 1.00
+  fenwick                      passed 12/12  F1 1.00
+  kittering                    passed 12/12  F1 1.00
+  sarvani                      passed 12/12  F1 1.00
+
+by mode:
+  autonomous                   passed 25/25  F1 1.00
+  supervised                   passed 25/25  F1 1.00
+
+by split:
+  dev                          passed 50/50  F1 1.00
+
+cases:
+  PASS  w1_d01_weight_break_upper_edge               supervised    4.3s
+  PASS  w1_d01_weight_break_upper_edge               autonomous    4.3s
+  PASS  w1_d02_minimum_and_fees_clean                supervised    3.3s
+  PASS  w1_d02_minimum_and_fees_clean                autonomous    3.3s
+  PASS  w1_d03_fuel_on_fees                          supervised    4.3s
+  PASS  w1_d03_fuel_on_fees                          autonomous    4.3s
+  PASS  w1_d04_backdated_amendment_after_invoice     supervised    4.7s
+  PASS  w1_d04_backdated_amendment_after_invoice     autonomous    4.7s
+  PASS  w1_d05_rate_notice_authority                 supervised    3.5s
+  PASS  w1_d05_rate_notice_authority                 autonomous    3.5s
+  PASS  w1_d06_same_shipment_on_two_invoices         supervised    5.0s
+  PASS  w1_d06_same_shipment_on_two_invoices         autonomous    5.0s
+  PASS  w2_d07_inr_slab_edge_single_conversion       supervised    3.1s
+  PASS  w2_d07_inr_slab_edge_single_conversion       autonomous    3.0s
+  PASS  w2_d08_no_annex_f_row                        supervised    3.2s
+  PASS  w2_d08_no_annex_f_row                        autonomous    3.2s
+  PASS  w2_d09_paid_invoice_resent_across_batches    supervised    4.5s
+  PASS  w2_d09_paid_invoice_resent_across_batches    autonomous    4.6s
+  PASS  w2_d10_amendment_vs_rate_notice_conflict     supervised    3.3s
+  PASS  w2_d10_amendment_vs_rate_notice_conflict     autonomous    3.3s
+  PASS  w2_d11_tracking_date_decides_validity        supervised    3.0s
+  PASS  w2_d11_tracking_date_decides_validity        autonomous    3.0s
+  PASS  w2_d12_amendment_names_missing_annex         supervised    3.4s
+  PASS  w2_d12_amendment_names_missing_annex         autonomous    3.4s
+  PASS  w3_d13_quarterly_rebate_due_unpaid           supervised    3.4s
+  PASS  w3_d13_quarterly_rebate_due_unpaid           autonomous    3.4s
+  PASS  w3_d14_rebate_tier_boundary_part_credited    supervised    3.6s
+  PASS  w3_d14_rebate_tier_boundary_part_credited    autonomous    3.6s
+  PASS  w3_d15_margin_step_down                      supervised    3.2s
+  PASS  w3_d15_margin_step_down                      autonomous    3.2s
+  PASS  w3_d16_annual_improvement_credit_not_yet_due supervised    4.8s
+  PASS  w3_d16_annual_improvement_credit_not_yet_due autonomous    4.7s
+  PASS  w3_d17_reordered_statement_columns_clean     supervised    3.0s
+  PASS  w3_d17_reordered_statement_columns_clean     autonomous    3.0s
+  PASS  w3_d18_duplicate_net_of_credit_memos         supervised    3.6s
+  PASS  w3_d18_duplicate_net_of_credit_memos         autonomous    3.7s
+  PASS  w4_d19_waiver_names_one_shipment             supervised    3.2s
+  PASS  w4_d19_waiver_names_one_shipment             autonomous    3.2s
+  PASS  w4_d20_unauthorised_and_quoted_waivers       supervised    3.5s
+  PASS  w4_d20_unauthorised_and_quoted_waivers       autonomous    3.5s
+  PASS  w4_d21_late_fees_inside_extension_and_grace  supervised    3.6s
+  PASS  w4_d21_late_fees_inside_extension_and_grace  autonomous    3.6s
+  PASS  w4_d22_compounding_fee_and_risk_window       supervised    3.8s
+  PASS  w4_d22_compounding_fee_and_risk_window       autonomous    3.8s
+  PASS  w4_d23_notice_deadline_window_edge           supervised    2.5s
+  PASS  w4_d23_notice_deadline_window_edge           autonomous    2.5s
+  PASS  w4_d24_one_off_feedback_and_injection        supervised   11.1s
+  PASS  w4_d24_one_off_feedback_and_injection        autonomous   11.1s
+  PASS  w4_d25_scanned_invoice_wrong_break           supervised   11.3s
+  PASS  w4_d25_scanned_invoice_wrong_break           autonomous   11.1s

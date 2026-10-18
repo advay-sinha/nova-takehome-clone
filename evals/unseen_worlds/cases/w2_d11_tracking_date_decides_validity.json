@@ -1,0 +1,27 @@
+{
+ "id": "w2_d11_tracking_date_decides_validity",
+ "world": "sarvani",
+ "split": "dev",
+ "families": [
+  "A",
+  "H"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w2_d11_tracking_date_decides_validity",
+ "feedback": {},
+ "why": "The milestone report (first in the glossary's pickup order) has the consignment picked up 01.07.2043, so Validity 2 (166.00) and July fuel (23.0%) apply; the invoice's printed 30.06.2043 would wrongly suggest Validity 1 (161.75) and June fuel.",
+ "reports": [
+  {
+   "as_of": "2043-07-30",
+   "expect": [],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0870",
+      "class": "overcharge"
+     },
+     "why": "billed exactly at the Validity 2 rate and July fuel"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "id": "w2_h06_monthly_waiver_inr",
+ "world": "sarvani",
+ "split": "holdout",
+ "families": [
+  "D"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w2_h06_monthly_waiver_inr",
+ "feedback": {},
+ "why": "The Schedule 1 waivers contact waived documentation for March 2043 collections: both March documentation charges on SAL-INV-43-0750 are waived (INR 700.00, converted once); the April consignment is outside the waiver.",
+ "reports": [
+  {
+   "as_of": "2043-04-18",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0750",
+      "class": "waived_but_billed"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "INR 700.00 / 83.3333 = 8.40",
+     "amount_usd": "8.40"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0790",
+      "class": "waived_but_billed"
+     },
+     "why": "April is not the waived month"
+    }
+   ]
+  }
+ ]
+}

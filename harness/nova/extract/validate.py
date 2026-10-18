@@ -42,7 +42,7 @@ BLOCK_NUMERIC = {
     "pricing_rules": ["chargeable_weight_divisor", "storage_free_days"],
 }
 BLOCK_DATES = {"term": ["initial_term_end", "non_renewal_notice_deadline"]}
-SLASH_DATE = re.compile(r"\b(\d{1,2})[/.](\d{1,2})[/.](\d{4})\b")
+SLASH_DATE = re.compile(r"\b(\d{1,2})([/.-])(\d{1,2})\2(\d{4})\b")
 NUMBER = re.compile(r"(?<![\w.])(?:USD|INR)?\s*([-+]?\d+(?:,\d+)*(?:\.\d+)?)(?![\d.])", re.I)
 
 
@@ -71,11 +71,16 @@ class PageIndex:
 
     @staticmethod
     def _date_order(pages: list[str]) -> str | None:
-        """'DMY' or 'MDY' from numeric dates whose first or second part exceeds 12; None if no such date."""
+        """'DMY' or 'MDY' from numeric dates whose first or second part exceeds 12. When none does, dates written
+        only with dots (10.06.2043) are day-first: the dotted form is a day.month.year convention, and month-first
+        dates are written with slashes. Otherwise None: the order is never guessed."""
         dmy = mdy = False
-        for a, b, _ in SLASH_DATE.findall("\n".join(pages)):
+        found = SLASH_DATE.findall("\n".join(pages))
+        for a, _, b, _ in found:
             dmy |= int(a) > 12
             mdy |= int(b) > 12
+        if not dmy and not mdy and found and all(sep == "." for _, sep, _, _ in found):
+            return "DMY"
         return "DMY" if dmy and not mdy else "MDY" if mdy and not dmy else None
 
     def page_text(self, doc: str, page: int) -> str | None:
@@ -98,6 +103,15 @@ class PageIndex:
         else:
             ok = norm_text(quote) in norm_text(text)
         return None if ok else f"quote not found on {doc} page {page}"
+
+    def has_month(self, doc: str, ym: str) -> bool:
+        """A YYYY-MM month written in the document as 2043-03, March 2043, Mar 2043 or Mar-2043."""
+        y, m = int(ym[:4]), int(ym[5:7])
+        if not 1 <= m <= 12:
+            return False
+        forms = [rf"{y}-{m:02d}(?!-\d)", rf"\b{calendar.month_name[m]}[\s-]+{y}\b", rf"\b{calendar.month_abbr[m]}[\s.-]+{y}\b"]
+        text = "\n".join(self.pages.get(doc, []))
+        return any(re.search(f, text, re.I) for f in forms)
 
     def has_value(self, doc: str, page: int, value: str) -> bool:
         """On the cited page, or elsewhere in the same document (a header's total can sit on its last page)."""
@@ -134,15 +148,20 @@ class PageIndex:
                        f"{d.day} {month} {d.year}", f"{month} {d.day}, {d.year}", f"{mon} {d.day}, {d.year}",
                        f"{mon} {d.day:02d}, {d.year}", f"{d.day:02d}-{mon}-{d.year}", f"{d.day}-{mon}-{d.year}",
                        f"{d.day:02d}-{month}-{d.year}", f"{d.day}-{month}-{d.year}"}
-        dmy = {f"{d.day:02d}/{d.month:02d}/{d.year}", f"{d.day}/{d.month}/{d.year}", f"{d.day:02d}.{d.month:02d}.{d.year}"}
-        mdy = {f"{d.month:02d}/{d.day:02d}/{d.year}", f"{d.month}/{d.day}/{d.year}"}
+        suffix = "th" if 11 <= d.day <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(d.day % 10, "th")
+        unambiguous |= {f"{d.day}{suffix} {month} {d.year}", f"{d.day}{suffix} {mon} {d.year}",
+                        f"{month} {d.day}{suffix}, {d.year}"}
+        dmy = {f"{d.day:02d}/{d.month:02d}/{d.year}", f"{d.day}/{d.month}/{d.year}", f"{d.day:02d}.{d.month:02d}.{d.year}",
+               f"{d.day:02d}-{d.month:02d}-{d.year}"}
+        mdy = {f"{d.month:02d}/{d.day:02d}/{d.year}", f"{d.month}/{d.day}/{d.year}", f"{d.month:02d}.{d.day:02d}.{d.year}",
+               f"{d.month:02d}-{d.day:02d}-{d.year}"}
         scan = self.scan.get(doc)
 
         def on_page(forms):
             if scan:
                 return any(squash(f) in squash(text) for f in forms)
             # Not inside a longer number or date, but a sentence-ending '.' after the date is fine.
-            return any(re.search(r"(?<!\d)(?<!\d[/.])" + re.escape(f) + r"(?!\d|[/.]\d)", text) for f in forms)
+            return any(re.search(r"(?<!\d)(?<!\d[/.-])" + re.escape(f) + r"(?!\d|[/.-]\d)", text) for f in forms)
 
         if on_page(unambiguous):
             return None
@@ -183,7 +202,7 @@ def check_item(index: PageIndex, kind: str, item: dict) -> tuple[str, list[str]]
             issues.append(f"{f}: {msg}")
     for f in MONTH_FIELDS.get(kind, []):
         v = item.get(f)
-        if v is not None and not (re.fullmatch(r"\d{4}-\d{2}", v) and index.has_value(src["doc"], src["page"], v)):
+        if v is not None and not (re.fullmatch(r"\d{4}-\d{2}", v) and index.has_month(src["doc"], v)):
             issues.append(f"{f} {v!r} not on the cited page")
     if kind == "contracts":
         for block in NESTED_BLOCKS:

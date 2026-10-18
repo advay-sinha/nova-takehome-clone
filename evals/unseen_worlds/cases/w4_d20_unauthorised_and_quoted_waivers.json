@@ -1,0 +1,41 @@
+{
+ "id": "w4_d20_unauthorised_and_quoted_waivers",
+ "world": "aldous",
+ "split": "dev",
+ "families": [
+  "D",
+  "I"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w4_d20_unauthorised_and_quoted_waivers",
+ "feedback": {},
+ "why": "Rufus Penhaligon is not in Schedule 1, so his waiver has no effect. The inside-delivery waiver is only seen quoted in the customer's forward; the original from the waivers contact is not held.",
+ "reports": [
+  {
+   "as_of": "2043-04-30",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0141",
+      "class": "waived_but_billed"
+     },
+     "verdict": "cannot_determine",
+     "actions": {
+      "supervised": "draft:request_document",
+      "autonomous": "execute:request_document"
+     },
+     "why": "quoted-only waiver: request the original email",
+     "missing_doc": "original waiver email"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0140",
+      "class": "waived_but_billed"
+     },
+     "why": "waiver from a sender outside Schedule 1"
+    }
+   ]
+  }
+ ]
+}
