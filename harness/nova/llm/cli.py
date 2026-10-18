@@ -48,6 +48,8 @@ class CLIProvider:
     name = "cli"
 
     def __init__(self, cfg: dict, local: dict):
+        from . import forbid_in_local_only
+        forbid_in_local_only("Claude CLI provider")
         cmd = find_cli(local)
         if not cmd:
             raise LLMUnavailable("no ANTHROPIC_API_KEY and no `claude` CLI on PATH")

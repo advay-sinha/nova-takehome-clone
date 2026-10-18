@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 import jsonschema
 
 from ..llm import BudgetExhausted, CallBudget, LLMError, LLMLimited, LLMRequest, LLMUnavailable, iter_completed
-from ..llm import workers_for
+from ..llm import local_reader_only, workers_for
 from ..llm.shared_cache import open_shared
 from . import constraints, prompts, tables
 from .schema import FACT_LISTS, FACTS_SCHEMA, RECHECK_SCHEMA, TABLE_MAP_SCHEMA
@@ -262,7 +262,11 @@ def _finish(store, stats: Counter, provider, u, docs: list[dict], req: LLMReques
 
 def run_pending(store, provider_factory, cfg: dict, seconds: float) -> dict:
     """Run every runnable unit within `seconds`. Use the source-validated local reader when no model backend
-    can be constructed; a configured provider's authentication or rate-limit failures keep their normal handling."""
+    can be constructed; a configured provider's authentication or rate-limit failures keep their normal handling.
+    With NOVA_LOCAL_READER_ONLY=1 the local reader runs before any provider or response cache is touched."""
+    if local_reader_only():
+        from .local import run_local
+        return run_local(store, seconds, reason="NOVA_LOCAL_READER_ONLY=1")
     stats = Counter()
     budget = CallBudget(seconds, int(cfg["max_calls_per_step"]))
     provider = None
@@ -277,7 +281,7 @@ def run_pending(store, provider_factory, cfg: dict, seconds: float) -> dict:
                 if shared is not None:
                     shared.close()
                 from .local import run_local
-                return run_local(store, budget.remaining_s())
+                return run_local(store, budget.remaining_s(), reason="no model backend available")
         cached_work, live_work = [], []
         for u in model_units:
             docs = [_doc_payload(store, d) for d in json.loads(u["docs_json"])]

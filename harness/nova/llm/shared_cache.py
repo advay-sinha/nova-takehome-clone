@@ -40,5 +40,7 @@ class SharedCache:
 
 
 def open_shared(local: dict | None = None) -> SharedCache | None:
+    from . import forbid_in_local_only
+    forbid_in_local_only("shared model-response cache")
     path = (load_local() if local is None else local).get("shared_cache")
     return SharedCache(Path(path)) if path else None

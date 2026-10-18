@@ -12,21 +12,30 @@
 
 The environment gives ANTHROPIC_API_KEY and ANTHROPIC_BASE_URL. Keep the argument names as they are: grader/validate.py
 checks them. Replace the NotImplementedError bodies with your code.
+
+Optional, before the command: --local-reader-only sets NOVA_LOCAL_READER_ONLY=1 and drops ANTHROPIC_API_KEY,
+ANTHROPIC_BASE_URL and NOVA_LOCAL_LLM inside this process, so extraction uses only the local document reader (no SDK,
+no Claude CLI, no response cache). The grader passes only PATH and ANTHROPIC_* to the harness, so the flag travels in
+its --harness command string instead of the environment.
 """
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 
 from nova.app import feedback, ingest, report
 from nova.llm import LLMError
 
 DEFAULT_STATE = ".state"
+MODEL_ENV = ("ANTHROPIC_API_KEY", "ANTHROPIC_BASE_URL", "NOVA_LOCAL_LLM")
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="harness.py", description="Freight invoice audit harness")
-    sub = ap.add_subparsers(dest="cmd", required=True)
+    ap.add_argument("--local-reader-only", action="store_true",
+                    help="extract with the local document reader only (no model provider or response cache)")
+    sub =ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("ingest", help="read one batch folder into the state dir")
     p.add_argument("batch_dir")
     p.add_argument("--state-dir", default=DEFAULT_STATE)
@@ -38,6 +47,10 @@ def main(argv=None) -> int:
     p.add_argument("feedback_file")
     p.add_argument("--state-dir", default=DEFAULT_STATE)
     a = ap.parse_args(argv)
+    if a.local_reader_only:
+        for k in MODEL_ENV:
+            os.environ.pop(k, None)
+        os.environ["NOVA_LOCAL_READER_ONLY"] = "1"
     try:
         if a.cmd == "ingest":
             ingest(a.batch_dir, a.state_dir)
