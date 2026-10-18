@@ -37,7 +37,49 @@ MUTATIONS = [
     ("rejected evidence blocks execution", "report.py", 'c.signals["unverified"] = True',
      'c.signals["unverified"] = False',
      "test_report_guards.EvidenceGuardTests.test_rejected_citation_prevents_unattended_action"),
+    # Added with the unseen-world suite; each guard passes on the real code and names the defect it pins.
+    ("retro after an empty report", "report.py",
+     'store.db.execute("INSERT OR IGNORE INTO report_runs VALUES (?, ?)", (mode, as_of))',
+     'store.db.execute("SELECT ?, ?", (mode, as_of))',
+     "test_report_feedback.ActionTests.test_key_created_by_a_backdated_amendment_after_an_empty_report_is_retro"),
+    ("inclusive weight-break upper bound", "world.py", "(self.hi is None or weight <= self.hi)",
+     "(self.hi is None or weight < self.hi)",
+     "test_overcharge.OverchargeTests.test_weight_on_a_band_upper_bound_is_priced_in_that_band"),
+    ("INR converted once", "report.py", 'or c.signals.get("usd_done") or c.cls == "overcharge":',
+     'or c.signals.get("usd_done"):',
+     "test_report_guards.CurrencyTests.test_inr_overcharge_is_converted_once_in_the_report"),
+    ("duplicate self-collision", "rules/duplicate.py", "if k in first_seen and first_seen[k][0] != inv:",
+     "if k in first_seen:",
+     "test_detectors.DuplicateTests.test_two_lines_of_one_shipment_on_one_invoice_do_not_collide"),
+    ("waiver scope by shipment", "rules/waiver.py",
+     'return norm_id(line.get("house_awb") or line.get("awb")) in awbs or norm_id(line.get("awb")) in awbs',
+     "return True",
+     "test_unseen_metamorphic.PageAndScopeTests.test_one_off_waiver_follows_the_named_shipment_only"),
+    ("ledger paid wording", "rules/common.py", r'PAID = re.compile(r"\b(?:paid|settled|cleared|remitted)\b", re.I)',
+     r'PAID = re.compile(r"\b(?:paid)\b", re.I)',
+     "test_reader_generalisation.LedgerWordsTests.test_status_words"),
+    ("grace period wording", "extract/local_contracts.py", r'number(r"\bwithin\s+("',
+     r'number(r"\bwithin_never\s+("',
+     "test_reader_generalisation.AgreementGrammarTests.test_grace_written_as_payment_within_n_days"),
+    ("clause across a page break", "extract/local_common.py",
+     'if current and p != src_page and re.search(r"[.;:!?)]\\s*$", last):', "if current and p != src_page:",
+     "test_unseen_metamorphic.PageAndScopeTests.test_grace_clause_split_across_a_page"),
+    # Found by the frozen-reader holdout run (w2_h05, w4_h12) and fixed afterwards.
+    ("dotted dates are day-first", "extract/validate.py",
+     'if not dmy and not mdy and found and all(sep == "." for _, sep, _, _ in found):', "if False:",
+     "test_reader_generalisation.HoldoutFoundTests.test_dotted_numeric_dates_are_day_first_when_no_day_exceeds_twelve"),
+    ("amendment moves the term end", "extract/local_contracts.py",
+     'c["term"].update(initial_term_end=iso(m[1], doc.order), source=src)', 'c["term"].update(source=src)',
+     "test_reader_generalisation.HoldoutFoundTests.test_amendment_sentence_that_moves_the_term_end"),
+    ("extension keeps renewal terms", "rules/expiry.py",
+     'term = {**{k: v for k, v in term.items() if k != "non_renewal_notice_deadline"},', "term = {**{},",
+     "test_reader_generalisation.HoldoutFoundTests.test_extension_keeps_the_agreement_renewal_terms"),
+    ("OCR-glued waybill cell", "extract/local_billing.py", "or capture(GLUED_AWB, line, flags=0)", "",
+     "test_reader_generalisation.InvoiceLayoutTests.test_ocr_glued_waybill_and_lane_cells"),
 ]
+# The metamorphic guards build their mailboxes with the unseen-world document writers and oracle.
+COPY = [("harness/nova", ()), ("tests/offline", ()),
+        ("evals/unseen_worlds", ("mailboxes", "results", "cases", "feedback"))]
 
 CHILD = """
 import io, json, sys, unittest
@@ -68,8 +110,8 @@ def main() -> int:
     for name, module, original, replacement, guard in MUTATIONS:
         with tempfile.TemporaryDirectory(prefix="nova-mutation-") as tmp:
             root = Path(tmp)
-            for rel in ("harness/nova", "tests/offline"):
-                shutil.copytree(ROOT / rel, root / rel, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+            for rel, skip in COPY:
+                shutil.copytree(ROOT / rel, root / rel, ignore=shutil.ignore_patterns("__pycache__", "*.pyc", *skip))
             control = run_guard(root, guard)
             if control["failures"]:
                 raise RuntimeError(f"unmodified control failed: {guard}\n{control['output']}")

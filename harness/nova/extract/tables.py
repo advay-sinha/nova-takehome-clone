@@ -14,7 +14,7 @@ from . import validate
 from .. import textlayer
 
 DATE_ISO = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b")
-DATE_SLASH = re.compile(r"\b(\d{1,2})[/.](\d{1,2})[/.](\d{4})\b")
+DATE_SLASH = re.compile(r"\b(\d{1,2})([/.-])(\d{1,2})\2(\d{4})\b")
 DATE_WORDS = re.compile(r"\b(\d{1,2})\s+([A-Za-z]{3})[a-z]*\.?\s+(\d{4})\b")
 NUMBER = re.compile(r"-?\d[\d,]*(?:\.\d+)?")
 CURRENCY = re.compile(r"\b([A-Z]{3})\b")
@@ -33,7 +33,7 @@ def parse_date(value, fmt: str) -> str | None:
         if (m := DATE_ISO.search(s)):
             return date(int(m[1]), int(m[2]), int(m[3])).isoformat()
         if (m := DATE_SLASH.search(s)):
-            a, b, y = int(m[1]), int(m[2]), int(m[3])
+            a, b, y = int(m[1]), int(m[3]), int(m[4])
             if fmt == "MM/DD/YYYY":
                 a, b = b, a
             elif fmt != "DD/MM/YYYY":

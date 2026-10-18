@@ -1,0 +1,40 @@
+{
+ "id": "w1_d06_same_shipment_on_two_invoices",
+ "world": "fenwick",
+ "split": "dev",
+ "families": [
+  "C"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w1_d06_same_shipment_on_two_invoices",
+ "feedback": {},
+ "why": "FR7735002's linehaul and FAF appear on FRA-0043-1452 and again on the later FRA-0043-1530; three shipments of identical weight on one invoice are not duplicates of each other.",
+ "reports": [
+  {
+   "as_of": "2043-08-12",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1530",
+      "class": "duplicate"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "duplicated lines on the later invoice: 483.00 + 73.66 = 556.66",
+     "amount_usd": "556.66"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1452",
+      "class": "duplicate"
+     },
+     "why": "the earlier invoice is never the duplicate; its three equal-weight shipments are different AWBs"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "id": "w4_h12_term_extension_removes_alert",
+ "world": "aldous",
+ "split": "holdout",
+ "families": [
+  "G",
+  "J"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w4_h12_term_extension_removes_alert",
+ "feedback": {},
+ "why": "Before the amendment the notice deadline is 2043-12-02 (60 days before 31st January 2044), 48 days after 2043-10-15: alert. The signed amendment moves the expiry to 31st July 2044, so the deadline becomes 2044-06-01, far outside 60 days on 2043-10-20: the alert goes away.",
+ "reports": [
+  {
+   "as_of": "2043-10-15",
+   "expect": [
+    {
+     "key": {
+      "contract_id": "ASC-QNO-CTA-43"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "internal:alert",
+      "autonomous": "internal:alert"
+     },
+     "why": "notice deadline 2043-12-02",
+     "deadline": "2043-12-02"
+    }
+   ],
+   "controls": [],
+   "after": "batch_01"
+  },
+  {
+   "as_of": "2043-10-20",
+   "expect": [],
+   "controls": [
+    {
+     "key": {
+      "contract_id": "ASC-QNO-CTA-43"
+     },
+     "why": "the extension moved the deadline to 2044-06-01"
+    }
+   ]
+  }
+ ]
+}

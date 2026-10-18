@@ -1,0 +1,41 @@
+{
+ "id": "w1_d01_weight_break_upper_edge",
+ "world": "fenwick",
+ "split": "dev",
+ "families": [
+  "A",
+  "H"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w1_d01_weight_break_upper_edge",
+ "feedback": {},
+ "why": "Exhibit A: 100.0 kg is in the 100 to 499.9 kg break (3.85), 99.9 kg in 0 to 99.9 (4.40), 500.0 kg in 500 and above (3.30); FAF March 14.60% on linehaul.",
+ "reports": [
+  {
+   "as_of": "2043-03-31",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1021",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "(440.00 + 64.24) - (385.00 + 56.21) = 63.03; pickup from the tracking export",
+     "amount_usd": "63.03"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1022",
+      "class": "overcharge"
+     },
+     "why": "99.9 kg at 4.40 and 500.0 kg at 3.30 are the contract breaks: the edge weights are billed right"
+    }
+   ]
+  }
+ ]
+}

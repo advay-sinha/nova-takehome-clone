@@ -151,6 +151,24 @@ class ActionTests(ReportBase):
         before = self.report(as_of="2040-05-31")[f"overcharge:{inv}"]   # the old date keeps its answer
         self.assertEqual(before["amount_usd"], "23.60")
 
+    def test_key_created_by_a_backdated_amendment_after_an_empty_report_is_retro(self):
+        # Found by the unseen-world suite: the previous report listed nothing, so no history row recorded it, and
+        # the new key was not marked retro.
+        inv = self.overbill(170, "PW170", "2040-03-02", rate="4.00")    # the contract rate: clean at first
+        self.assertEqual(self.report(as_of="2040-04-30"), {})
+        amd = self.k.doc("batch_01/0171.eml#AMD.pdf", "2040-06-10", "lena.sorell@ostravabio.example", "amendment")
+        self.k.fact("contracts", amd, {"contract_id": f"{CID}/AMD-4", "kind": "amendment", "amends_contract_id": CID,
+                                       "signed": True, "effective_date": "2040-02-01",
+                                       "amendment_changes": [{"lanes": ["KLX1-ORB2"], "effective_from": "2040-02-01",
+                                                              "what": "new rate"}]})
+        self.k.fact("rate_rows", amd, {"contract_id": f"{CID}/AMD-4", "lane": "KLX1-ORB2", "band": "100-299.5 kg",
+                                       "band_min_kg": "100", "band_max_kg": "299.5", "is_minimum_charge": False,
+                                       "period_label": None, "rate": "3.90"})
+        item = self.report(as_of="2040-06-30")[f"overcharge:{inv}"]
+        self.assertTrue(item.get("retro"))
+        self.assertEqual(item["supersedes"], [])
+        self.assertEqual(item["amount_usd"], "11.80")                  # (4.00 - 3.90) x 118
+
 
 class FeedbackTests(ReportBase):
     def waiver_by(self, sender, n, awb, month_pickup, quoted=False):

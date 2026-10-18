@@ -92,6 +92,13 @@ class DuplicateTests(Base):
         self.assertEqual(got[("duplicate", later, None)].amount_usd, D("17.70"))
         self.assertEqual(len(got), 1)                               # the earlier invoice is never the finding
 
+    def test_two_lines_of_one_shipment_on_one_invoice_do_not_collide(self):
+        # A shipment billed in two pieces on the same invoice (same AWB and charge) is not billed twice.
+        self.k.invoice(40, "2040-04-01", [
+            {"awb": "PW40", "label": "Air freight", "qty": "60", "rate": "4.60", "amount": "276.00"},
+            {"awb": "PW40", "label": "Air freight", "qty": "50", "rate": "4.60", "amount": "230.00"}])
+        self.assertEqual(duplicate.detect(self.k.world("2040-08-01")), [])
+
     def test_other_shipment_or_full_credit_is_fine(self):
         self.rebill(awb2="PW21")
         self.assertEqual(duplicate.detect(self.k.world("2040-08-01")), [])

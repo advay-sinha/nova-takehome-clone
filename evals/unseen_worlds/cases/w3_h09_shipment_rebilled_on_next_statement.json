@@ -1,0 +1,40 @@
+{
+ "id": "w3_h09_shipment_rebilled_on_next_statement",
+ "world": "kittering",
+ "split": "holdout",
+ "families": [
+  "C"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w3_h09_shipment_rebilled_on_next_statement",
+ "feedback": {},
+ "why": "MX4479302 is billed on the June statement and again on the July statement; the July statement is the duplicate for its lines. Two equal shipments on the June statement are not duplicates.",
+ "reports": [
+  {
+   "as_of": "2043-08-05",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "KOA-ST-4807",
+      "class": "duplicate"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "MX4479302 lines: 2740.00",
+     "amount_usd": "2740.00"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "KOA-ST-4806",
+      "class": "duplicate"
+     },
+     "why": "the earlier statement"
+    }
+   ]
+  }
+ ]
+}

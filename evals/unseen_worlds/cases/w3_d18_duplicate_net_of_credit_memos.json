@@ -1,0 +1,40 @@
+{
+ "id": "w3_d18_duplicate_net_of_credit_memos",
+ "world": "kittering",
+ "split": "dev",
+ "families": [
+  "C"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w3_d18_duplicate_net_of_credit_memos",
+ "feedback": {},
+ "why": "MX4475001 was credited in full on the April statement and billed again in May: fine. MX4475002 is on both statements; the later one is the duplicate, net of the partial credit memo for its fuel line. MX4475003 is new.",
+ "reports": [
+  {
+   "as_of": "2043-06-10",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "KOA-ST-4705",
+      "class": "duplicate"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "MX4475002 lines on the later statement 2023.00 less credit 325.50 = 1697.50",
+     "amount_usd": "1697.50"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "KOA-ST-4704",
+      "class": "duplicate"
+     },
+     "why": "the earlier statement is never the duplicate"
+    }
+   ]
+  }
+ ]
+}

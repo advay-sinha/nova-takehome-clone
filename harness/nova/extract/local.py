@@ -1,7 +1,8 @@
 """Credential-free extraction, using printed structure and the normal fact/evidence validators.
 
-This path has no model calls, response cache or knowledge of evaluation keys. It is selected only when a model
-provider cannot be constructed. Model authentication/rate-limit errors during a configured live run remain errors.
+This path has no model calls, response cache or knowledge of evaluation keys. It is selected when a model provider
+cannot be constructed, or explicitly with NOVA_LOCAL_READER_ONLY=1. Model authentication/rate-limit errors during a
+configured live run remain errors.
 """
 from __future__ import annotations
 
@@ -12,6 +13,7 @@ from collections import Counter
 import jsonschema
 
 from .local_billing import read_credit, read_invoice, read_transport, table_rows
+from .tables import _sheet_rows
 from .local_common import Document
 from .local_contracts import read_contract
 from .local_mail import read_email
@@ -44,7 +46,7 @@ def extract(docs, labels=(), contract_ids=(), hints=None):
     return out
 
 
-def run_local(store, seconds):
+def run_local(store, seconds, reason="no model backend available"):
     from .run import MAX_ATTEMPTS, _apply_recheck, _check_billing, _clone, _doc_payload, _now, _order_hints, log
     from ..llm import LLMUnavailable
 
@@ -52,7 +54,7 @@ def run_local(store, seconds):
     stats = Counter()
     whole_documents = {d for u in store.units(("done",)) if u["kind"] == "long" and u["backend"] == "local"
                        for d in json.loads(u["docs_json"])}
-    log("extract: no model backend available; using local document reader (no API calls or response cache)")
+    log(f"extract: {reason}; using local document reader (no API calls or response cache)")
     for _ in range(2):
         units = [u for u in store.units(("pending", "failed")) if u["attempts"] < MAX_ATTEMPTS and u["kind"] != "clone"]
         # Read agreement tables first so invoice labels come from held contracts.
@@ -74,11 +76,13 @@ def run_local(store, seconds):
             hints = _order_hints(store, [d["doc"] for d in docs])
             tables, prose = [], []
             for d in docs:
-                tab = table_rows(Document(d, hints.get(d["doc"])), store.get_blob(store.document(d["doc"])["sha256"])) if d["kind"] == "xlsx" else None
+                blob = store.get_blob(store.document(d["doc"])["sha256"]) if d["kind"] == "xlsx" else None
+                tab = table_rows(Document(d, hints.get(d["doc"])), blob) if blob else None
                 if tab:
                     tables.extend(tab)
                 else:
-                    prose.append(d)
+                    # A statement of account keeps its cell positions: the text layer drops empty cells.
+                    prose.append(dict(d, grid=[_sheet_rows(blob, p) for p in range(1, len(d["pages"]) + 1)]) if blob else d)
             data = extract(prose, labels, contract_ids, hints)
             jsonschema.validate(data, FACTS_SCHEMA)
             rows = validate_facts(PageIndex(prose, hints), data, FACT_LISTS) + tables

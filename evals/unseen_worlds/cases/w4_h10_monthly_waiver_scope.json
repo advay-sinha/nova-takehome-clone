@@ -1,0 +1,40 @@
+{
+ "id": "w4_h10_monthly_waiver_scope",
+ "world": "aldous",
+ "split": "holdout",
+ "families": [
+  "D"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w4_h10_monthly_waiver_scope",
+ "feedback": {},
+ "why": "The waivers contact waived liftgate for April 2043 deliveries: both April liftgate charges on ASC-43-0300 (80.00); the May delivery on ASC-43-0310 is billable.",
+ "reports": [
+  {
+   "as_of": "2043-05-20",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0300",
+      "class": "waived_but_billed"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "two April liftgate charges: 80.00",
+     "amount_usd": "80.00"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "ASC-43-0310",
+      "class": "waived_but_billed"
+     },
+     "why": "May is outside the waived month"
+    }
+   ]
+  }
+ ]
+}

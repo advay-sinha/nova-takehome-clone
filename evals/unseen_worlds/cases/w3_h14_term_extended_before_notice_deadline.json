@@ -1,0 +1,45 @@
+{
+ "id": "w3_h14_term_extended_before_notice_deadline",
+ "world": "kittering",
+ "split": "holdout",
+ "families": [
+  "G",
+  "J"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w3_h14_term_extended_before_notice_deadline",
+ "feedback": {},
+ "why": "The agreement renews unless notice is given at least 90 days before the end of the term (31 March 2045): deadline 2044-12-31, 46 days after 2044-11-15, so an alert. The signed amendment extends the term to 31 March 2046; renewal terms still apply, so the deadline moves to 2045-12-31 and the alert disappears on 2044-11-20.",
+ "reports": [
+  {
+   "as_of": "2044-11-15",
+   "expect": [
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "internal:alert",
+      "autonomous": "internal:alert"
+     },
+     "why": "notice deadline 2044-12-31",
+     "deadline": "2044-12-31"
+    }
+   ],
+   "controls": [],
+   "after": "batch_01"
+  },
+  {
+   "as_of": "2044-11-20",
+   "expect": [],
+   "controls": [
+    {
+     "key": {
+      "contract_id": "KOA-MWF-LSA-2043"
+     },
+     "why": "deadline moved to 2045-12-31"
+    }
+   ]
+  }
+ ]
+}

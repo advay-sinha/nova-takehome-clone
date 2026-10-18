@@ -1,0 +1,44 @@
+{
+ "id": "w2_d12_amendment_names_missing_annex",
+ "world": "sarvani",
+ "split": "dev",
+ "families": [
+  "B",
+  "I"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w2_d12_amendment_names_missing_annex",
+ "feedback": {},
+ "why": "Signed Amendment No. 2 replaces the BLR2-DEL1 rates from 01.05.2043 with Annex A revision 2, which is not attached or held; the rate for a 12.05.2043 BLR2-DEL1 pickup cannot be known. MAA3-BOM1 keeps its Annex A rate and is billed right.",
+ "reports": [
+  {
+   "as_of": "2043-05-23",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0688",
+      "class": "overcharge"
+     },
+     "verdict": "cannot_determine",
+     "actions": {
+      "supervised": "draft:request_document",
+      "autonomous": "execute:request_document"
+     },
+     "why": "Annex A revision 2 is named by the amendment and not held: ask the rates contact (Kavya Raghunathan)",
+     "missing_doc": "Annex A revision 2",
+     "evidence_docs": [
+      "batch_01/0002.eml#Amendment-2-SAL-BDI-MSA-0743.pdf"
+     ]
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0689",
+      "class": "overcharge"
+     },
+     "why": "the other route is untouched by the amendment"
+    }
+   ]
+  }
+ ]
+}

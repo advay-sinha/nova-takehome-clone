@@ -1,0 +1,33 @@
+{
+ "id": "w1_d02_minimum_and_fees_clean",
+ "world": "fenwick",
+ "split": "dev",
+ "families": [
+  "A"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w1_d02_minimum_and_fees_clean",
+ "feedback": {},
+ "why": "20.0 kg x 3.95 = 79.00 is below the USD 95.00 minimum, so 95.00 linehaul and FAF 14.80% of 95.00 = 14.06 are right; screening 0.15/kg and the 45.00 pickup fee match Exhibit C; 650.0 kg at the 500 kg and above break 2.95 = 1,917.50, FAF 283.79.",
+ "reports": [
+  {
+   "as_of": "2043-04-30",
+   "expect": [],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1104",
+      "class": "overcharge"
+     },
+     "why": "minimum linehaul is not an overcharge of 20 kg x 3.95"
+    },
+    {
+     "key": {
+      "invoice_id": "FRA-0043-1105",
+      "class": "overcharge"
+     },
+     "why": "heaviest break billed at its own rate"
+    }
+   ]
+  }
+ ]
+}

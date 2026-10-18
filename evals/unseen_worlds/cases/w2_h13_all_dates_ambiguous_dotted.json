@@ -1,0 +1,33 @@
+{
+ "id": "w2_h13_all_dates_ambiguous_dotted",
+ "world": "sarvani",
+ "split": "holdout",
+ "families": [
+  "H",
+  "A"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w2_h13_all_dates_ambiguous_dotted",
+ "feedback": {},
+ "why": "Every numeric date on the invoice (12.01.2043, 02.02.2043, 08.01.2043) has a day of 12 or less; written with dots they read day-first, so the invoice is January (Annex F 83.1450). 50.0 kg is the 45 - 99.9 kg slab (161.75), billed at the up to 44.9 kg rate 174.00.",
+ "reports": [
+  {
+   "as_of": "2043-01-15",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0105",
+      "class": "overcharge"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "INR 744.19 / 83.1450 = 8.95",
+     "amount_usd": "8.95"
+    }
+   ],
+   "controls": []
+  }
+ ]
+}

@@ -8,15 +8,33 @@ from datetime import date
 from .schema import DEFS, FACTS_SCHEMA
 from .tables import parse_date
 from .validate import PageIndex, norm_text
+from ..world import parse_band
 
 NUM = r"\d[\d,]*(?:\.\d+)?"
 ID = r"[A-Z0-9]+(?:[-/][A-Z0-9]+)+"
 AWB = r"(?:[A-Z]{2,6}\d{5,}(?:-[A-Z]\d+)?|\d{3}-\d{8})"
-LANE = r"(?<![A-Z0-9-])[A-Z]{2,5}\d?-[A-Z]{2,5}\d?(?![A-Z0-9-])"
+LANE_BODY = r"[A-Z]{2,5}\d?-[A-Z]{2,5}\d?"
+LANE = r"(?<![A-Z0-9-])" + LANE_BODY + r"(?![A-Z0-9-])"
+# OCR can drop the space between table cells: "235-77120501SFO3-SEA2". Used only when the strict form finds nothing.
+GLUED_AWB = r"(?<![A-Z0-9])(" + r"(?:[A-Z]{2,6}\d{5,}|\d{3}-\d{8})" + r")(?=[A-Z])"
+GLUED_LANE = r"(?<=\d)(" + LANE_BODY + r")(?![A-Z0-9-])"
 MONTH = r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
-DATE = (r"(?:\d{4}-\d{2}-\d{2}|\d{1,2}[/.]\d{1,2}[/.]\d{4}|"
-        r"\d{1,2}[ -]" + MONTH + r"[ -]\d{4}|" + MONTH + r"\s+\d{1,2},\s+\d{4})(?!\d)")
-BAND = r"(?:minimum charge|\d+(?:\.\d+)?\s*-\s*\d+(?:\.\d+)?\s*kg|\d+(?:\.\d+)?\s*\+\s*kg|\d+(?:\.\d+)?\s*kg\s+and\s+over)"
+DATE = (r"(?:\d{4}-\d{2}-\d{2}|\d{1,2}/\d{1,2}/\d{4}|\d{1,2}\.\d{1,2}\.\d{4}|\d{1,2}-\d{1,2}-\d{4}|"
+        r"\d{1,2}(?:st|nd|rd|th)?[ -]" + MONTH + r"[ -]\d{4}|" + MONTH + r"\s+\d{1,2}(?:st|nd|rd|th)?,\s+\d{4})(?!\d)")
+_W = r"\d+(?:\.\d+)?"
+_KG = r"\s*kgs?\b"
+BAND = (r"(?:minimum charge|" + _W + r"\s*(?:kgs?\s*)?(?:-|–|to|through)\s*" + _W + _KG + "|" + _W + r"\s*\+" + _KG + "|"
+        + _W + _KG + r"\s*\+|" + _W + _KG + r"\s+(?:and|or)\s+(?:over|above|more)|up\s+to\s+" + _W + _KG + ")")
+
+
+# A heading that opens an annex-like block or a numbered part: "Annex B", "Exhibit A", "Part 3 Payment".
+SECTION = r"(?:Annex|Appendix|Schedule|Exhibit|Attachment)\s|(?:Part|Section|Article|Chapter)\s+\d+\b(?!\.\d)"
+
+
+def is_heading(line: str) -> bool:
+    """A section heading line, not a wrapped sentence that happens to start with "Exhibit B ..."."""
+    line = line.strip()
+    return bool(re.match(SECTION, line)) and len(line) <= 80 and not line.endswith((".", ",", ";", ":"))
 
 
 def blank(schema):
@@ -56,7 +74,7 @@ def iso(text, order=None):
     m = re.search(DATE, text, re.I)
     if not m:
         return None
-    token = m[0]
+    token = re.sub(r"(?<=\d)(?:st|nd|rd|th)\b", "", m[0])      # "15th May 2043" -> "15 May 2043"
     if re.fullmatch(r"\d{1,2}-[A-Za-z]+-\d{4}", token):
         token = token.replace("-", " ")
     if (m := re.fullmatch(r"([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})", token)):
@@ -75,10 +93,8 @@ def month(text):
 
 
 def band_bounds(label):
-    if "minimum" in label.lower():
-        return None, None, True
-    values = re.findall(r"\d+(?:\.\d+)?", label)
-    return (values[0] if values else None, values[1] if len(values) > 1 else None, False)
+    lo, hi, minimum = parse_band(label)
+    return (None if lo is None else str(lo)), (None if hi is None else str(hi)), minimum
 
 
 class Document:
@@ -87,6 +103,7 @@ class Document:
         self.kind = payload["kind"]
         self.scan = payload.get("is_scan", False)
         self.pages = payload["pages"]
+        self.grid = payload.get("grid")          # spreadsheet cells by position, one list of rows per sheet
         self.text = "\n".join(self.pages)
         self.flat = norm_text(self.text)
         self.order = PageIndex._date_order(self.pages) or order
@@ -112,19 +129,33 @@ class Document:
         return None, None
 
     def clauses(self):
+        """Numbered clauses with their text. A clause cut mid-sentence by a page break continues on the next page;
+        its citation stays the part on the page where it starts, so the quote is on the cited page."""
         result = []
+        current, src_page, src_lines = [], None, []
+
+        def flush():
+            if current:
+                result.append((norm_text(" ".join(current)), self.source(src_page, " ".join(src_lines))))
+
         for p, page in enumerate(self.pages, 1):
-            current = []
+            last = next((ln for ln in reversed(current) if ln.strip()), "")
+            if current and p != src_page and re.search(r"[.;:!?)]\s*$", last):
+                flush()                        # the clause ended with the page
+                current, src_lines = [], []
             for line in page.splitlines():
                 start = re.match(r"^\d{1,2}\.\d{1,2}\s", line)
-                stop = start or re.match(r"^(?:\d{1,2} [A-Z]|Initials:|Confidential|Annex |Appendix |Schedule )", line)
+                stop = start or re.match(r"^(?:\d{1,2} [A-Z]|Initials:|Confidential)", line) or is_heading(line)
                 if stop and current:
-                    result.append((norm_text(" ".join(current)), self.source(p, " ".join(current))))
-                    current = []
-                if start or (current and not stop):
+                    flush()
+                    current, src_lines = [], []
+                if start:
+                    current, src_page, src_lines = [line], p, [line]
+                elif current and not stop:
                     current.append(line)
-            if current:
-                result.append((norm_text(" ".join(current)), self.source(p, " ".join(current))))
+                    if p == src_page:
+                        src_lines.append(line)
+        flush()
         return result
 
     def clause(self, pattern):

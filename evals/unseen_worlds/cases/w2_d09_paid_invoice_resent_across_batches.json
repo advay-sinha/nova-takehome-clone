@@ -1,0 +1,40 @@
+{
+ "id": "w2_d09_paid_invoice_resent_across_batches",
+ "world": "sarvani",
+ "split": "dev",
+ "families": [
+  "C"
+ ],
+ "mailbox": "evals/unseen_worlds/mailboxes/w2_d09_paid_invoice_resent_across_batches",
+ "feedback": {},
+ "why": "The payables extract shows SAL-INV-43-0418 settled on 02.03.2043 and the carrier asks for it again in batch_02: a duplicate for the invoice total. SAL-INV-43-0466 is open and is resent only for records.",
+ "reports": [
+  {
+   "as_of": "2043-03-31",
+   "expect": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0418",
+      "class": "duplicate"
+     },
+     "verdict": "finding",
+     "actions": {
+      "supervised": "draft:dispute",
+      "autonomous": "execute:dispute"
+     },
+     "why": "invoice total INR 16072.10 / Annex F February 2043 83.2275 = USD 193.11",
+     "amount_usd": "193.11"
+    }
+   ],
+   "controls": [
+    {
+     "key": {
+      "invoice_id": "SAL-INV-43-0466",
+      "class": "duplicate"
+     },
+     "why": "unpaid invoice resent for records only"
+    }
+   ]
+  }
+ ]
+}
